@@ -1,0 +1,25 @@
+DROP TABLE IF EXISTS payroll.tblEmployees CASCADE;
+DROP TABLE IF EXISTS payroll.tblPayPeriods CASCADE;
+
+
+CREATE TABLE payroll.tblEmployees(
+   employeeId VARCHAR(4) NOT NULL,
+   firstName VARCHAR(100) NOT NULL,
+   lastName VARCHAR(100) NOT NULL,
+   birthDate DATETIME NOT NULL,
+   PRIMARY KEY (employeeId)
+);
+
+CREATE TABLE payroll.tblPayPeriods(
+   id INT NOT NULL AUTO_INCREMENT,
+   hours DECIMAL NOT NULL,
+   wage DECIMAL NOT NULL,
+   FOREIGN KEY (employee) REFERENCES tblEmployees(employeeId)
+);
+
+CREATE TABLE payroll.tblRecords(
+   recordId INT NOT NULL AUTO_INCREMENT,
+   employeeId VARCHAR(10) NOT NULL,
+   period VARCHAR(50) NOT NULL,
+   PRIMARY KEY (recordId)
+);
