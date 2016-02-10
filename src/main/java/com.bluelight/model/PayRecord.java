@@ -1,9 +1,7 @@
 package com.bluelight.model;
 
 import com.opencsv.bean.CsvBind;
-import org.joda.time.DateTime;
 
-import java.math.BigDecimal;
 
 /**
  * PayRecord
@@ -13,8 +11,6 @@ import java.math.BigDecimal;
  * @version 1, 2/7/2016
  */
 public class PayRecord extends PayrollData {
-
-
 
     @CsvBind
     private String period;
