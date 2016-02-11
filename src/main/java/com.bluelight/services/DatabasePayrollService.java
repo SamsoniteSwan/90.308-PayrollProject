@@ -42,9 +42,7 @@ public class DatabasePayrollService implements PayrollService {
             Statement statement = connection.createStatement();
 
             // Nested query using the MIN() function to get
-            String queryString = "SELECT * FROM tblRecords WHERE time =" +
-                    "(SELECT MAX(time) FROM quotes WHERE symbol = '" + employeeId +
-                    "') AND (symbol = '" + employeeId + "')";
+            String queryString = "SELECT * FROM tblRecords WHERE employeeId = '" + employeeId + "')";
             ResultSet resultSet = statement.executeQuery(queryString);
 
             if (!resultSet.isBeforeFirst()) { // make sure a value exists

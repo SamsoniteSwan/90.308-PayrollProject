@@ -18,7 +18,7 @@ public class Employee implements Person {
     private String firstName;
     private String lastName;
     private Timestamp birthDate;
-    private int employeeId;
+    private String employeeId;
     private ArrayList<PayPeriod> payHistory;
 
 
@@ -28,8 +28,8 @@ public class Employee implements Person {
      * @return an integer value
      */
     @Id
-    @Column(name = "person_Id", nullable = false, insertable = true, updatable = true)
-    public int getEmployeeId() {
+    @Column(name = "employeeId", nullable = false, insertable = true, updatable = true)
+    public String getEmployeeId() {
         return employeeId;
     }
 
@@ -39,7 +39,7 @@ public class Employee implements Person {
      *
      * @param employeeId a unique value.
      */
-    public void setEmployeeId(int employeeId) {
+    public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
 
@@ -117,7 +117,7 @@ public class Employee implements Person {
 
     @Override
     public int hashCode() {
-        int result = employeeId;
+        int result = 1;
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (birthDate != null ? birthDate.hashCode() : 0);

@@ -19,7 +19,7 @@
 
         <mapping class="com.bluelight.model.Employee"/>
         <mapping class="com.bluelight.model.PayPeriod"/>
-
+        <mapping class="com.bluelight.model.PayRecord"/>
 
     </session-factory>
 </hibernate-configuration>

@@ -2,6 +2,9 @@ package com.bluelight.model;
 
 import com.opencsv.bean.CsvBind;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 
 /**
  * PayRecord
@@ -31,6 +34,25 @@ public class PayRecord extends PayrollData {
 
     public String getEmployeeId() {
         return employeeId;
+    }
+
+    /**
+     *
+     * @return get the employee
+     */
+    @ManyToOne
+    @JoinColumn(name = "person_Id", referencedColumnName = "person_Id", nullable = false)
+    public Person getEmployee() {
+        return employee;
+    }
+
+    /**
+     * Specify the Person associated with a stock.
+     *
+     * @param employee an employee instance
+     */
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
     /**
