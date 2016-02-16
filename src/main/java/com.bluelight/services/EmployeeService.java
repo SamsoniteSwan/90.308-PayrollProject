@@ -3,8 +3,10 @@ package com.bluelight.services;
 import com.bluelight.model.Employee;
 import com.bluelight.model.PayPeriod;
 import com.bluelight.model.Person;
+import com.bluelight.model.WorkDay;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * EmployeeService
@@ -22,7 +24,7 @@ public interface EmployeeService {
      * @throws ServiceException if a service can not read or write the requested data
      *                                    or otherwise perform the requested operation.
      */
-    List<Employee> getEmployee() throws ServiceException;
+    List<Employee> getEmployees() throws ServiceException;
 
     /**
      * Add a new person or update an existing Person's data
@@ -52,4 +54,7 @@ public interface EmployeeService {
      */
     void addPayPeriod(PayPeriod payPeriod, Employee employee) throws ServiceException;
 
+    List<WorkDay> getWorkdays(Employee employee) throws ServiceException;
+
+    void addWorkDay(Employee employee, WorkDay day) throws ServiceException;
 }

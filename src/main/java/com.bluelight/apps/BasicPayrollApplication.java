@@ -1,5 +1,6 @@
 package com.bluelight.apps;
 
+import com.bluelight.model.Employee;
 import com.bluelight.model.PayRecord;
 import com.bluelight.model.PayrollQuery;
 import com.bluelight.services.*;
@@ -18,6 +19,7 @@ public class BasicPayrollApplication {
 
     private CSVImportService csvImportService;
     private PayrollService payrollService;
+    private EmployeeService employeeService;
 
     /**
      * An enumeration that indicates how the program terminates (ends)
@@ -86,6 +88,18 @@ public class BasicPayrollApplication {
     }
 
     /**
+     * Create a new Application.
+     *
+     * @param employeeService the StockService this application instance should use for
+     *                     stock queries.
+     *                     <p/>
+     *                     NOTE: this is a example of Dependency Injection in action.
+     */
+    public BasicPayrollApplication(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
+
+    /**
      * Given a <CODE>stockQuery</CODE> get back a the info about the stock to display to th user.
      *
      * @param payrollQuery the stock to get data for.
@@ -122,9 +136,12 @@ public class BasicPayrollApplication {
         try {
 
             PayrollQuery payrollQuery = new PayrollQuery(args[0], args[1], args[2]);
+            EmployeeService employeeService = ServiceFactory.getDBEmployeeServiceInstance();
             PayrollService payrollService = ServiceFactory.getDBPayrollServiceInstance();
+
             BasicPayrollApplication basicPayrollApplication =
-                    new BasicPayrollApplication(payrollService);
+                    new BasicPayrollApplication(employeeService);
+
             basicPayrollApplication.displayRecords(payrollQuery);
 
         } catch (ParseException e) {
@@ -140,5 +157,18 @@ public class BasicPayrollApplication {
 
         exit(exitStatus, programTerminationMessage);
         System.out.println("Oops could not parse a date");
+    }
+
+
+    public void uploadCsvToDb(String source) {
+
+        CSVImportService csvImportService = new CSVImportService();
+        List<PayRecord> records = csvImportService.importedCsvPeriod(source);
+        for (PayRecord record : records) {
+            Employee ee = new Employee(record.getEmployeeId());
+            // TODO - finish
+            //employeeService.addOrUpdateEmployee(ee);
+        }
+
     }
 }

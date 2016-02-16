@@ -1,9 +1,14 @@
 package com.bluelight.model;
 
+import com.bluelight.utils.DatabaseUtils;
 import com.opencsv.bean.CsvBind;
+import org.joda.time.DateTime;
+import com.bluelight.utils.DateTimeParser;
 
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.text.ParseException;
+import java.util.logging.Logger;
 
 
 /**
@@ -69,6 +74,26 @@ public class PayRecord extends PayrollData {
         /*this.setCompany(company);
         this.symbol = company.getSymbol();
         */
+    }
+
+    public DateTime startDate() {
+        DateTime result = new DateTime();
+        try {
+            result = DatabaseUtils.makeDateTimeFromString(DateTimeParser.startAndEnd(period).get(0));
+        } catch (ParseException e) {
+            Logger.getGlobal().warning("could not parse start date:" + e.getMessage());
+        }
+        return result;
+    }
+
+    public DateTime endDate() {
+        DateTime result = new DateTime();
+        try {
+            result = DatabaseUtils.makeDateTimeFromString(DateTimeParser.startAndEnd(period).get(1));
+        } catch (ParseException e) {
+            Logger.getGlobal().warning("could not parse end date:" + e.getMessage());
+        }
+        return result;
     }
 
     @Override

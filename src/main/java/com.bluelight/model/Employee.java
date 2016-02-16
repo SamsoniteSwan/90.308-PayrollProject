@@ -1,11 +1,15 @@
 package com.bluelight.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Id;
+import com.bluelight.services.EmployeeService;
+import com.bluelight.services.ServiceException;
+import com.bluelight.services.ServiceFactory;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Employee
@@ -13,22 +17,67 @@ import java.util.ArrayList;
  * @author Jeremy Swanson (jeremy at jlswanson.com)
  * @version 1, 2/5/2016
  */
+@Entity
+@Table(name="tblEmployees")
 public class Employee implements Person {
 
-    private String firstName;
-    private String lastName;
-    private Timestamp birthDate;
+    @Id
+    @Column(name = "employeeId", nullable = false, insertable = true, updatable = true)
     private String employeeId;
-    private ArrayList<PayPeriod> payHistory;
+    @Basic
+    @Column(name = "firstName", nullable = false, insertable = true, updatable = true, length = 100)
+    private String firstName;
+    @Basic
+    @Column(name = "lastName", nullable = false, insertable = true, updatable = true, length = 100)
+    private String lastName;
+    @Basic
+    @Column(name = "dob", nullable = false, insertable = true, updatable = true)
+    private Timestamp birthDate;
 
+    @Basic
+    @Column(name = "status", nullable = false, insertable = true, updatable = true, length = 20)
+    private String status;
+    //private ArrayList<PayPeriod> payHistory;
+    @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<WorkDay> workDays;
+
+    //@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    //@JoinTable(name = "tblPayPeriods",
+    //        joinColumns = { @JoinColumn(name = "employeeId") }, inverseJoinColumns = { @JoinColumn(name = "id") })
+    //@Column
+    //@ElementCollection(targetClass=PayPeriod.class)
+    @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PayPeriod> payPeriods;
+
+    public Employee() {
+        //empty constructor required by Hibernate
+    }
+
+    public Employee(String id) {
+        this.employeeId = id;
+        try {
+            EmployeeService service = ServiceFactory.getDBEmployeeServiceInstance();
+            List<Employee> list = service.getEmployees();
+            for (Employee ee : list) {
+                if (ee.getEmployeeId().compareTo(id) == 0) {
+                    this.firstName = ee.getFirstName();
+                    this.lastName = ee.getLastName();
+                    this.birthDate = ee.getBirthDate();
+                    this.status = ee.getStatus();
+                    break;
+                }
+            }
+        } catch (ServiceException e) {
+            //TODO - add exception handling here
+        }
+    }
 
     /**
      * Primary Key - Unique ID for a particular row in the person table.
      *
      * @return an integer value
      */
-    @Id
-    @Column(name = "employeeId", nullable = false, insertable = true, updatable = true)
+
     public String getEmployeeId() {
         return employeeId;
     }
@@ -47,8 +96,7 @@ public class Employee implements Person {
      *
      * @return the person's first name
      */
-    @Basic
-    @Column(name = "first_Name", nullable = false, insertable = true, updatable = true, length = 100)
+
     public String getFirstName() {
         return firstName;
     }
@@ -65,8 +113,7 @@ public class Employee implements Person {
      *
      * @return the person's last name
      */
-    @Basic
-    @Column(name = "last_Name", nullable = false, insertable = true, updatable = true, length = 100)
+
     public String getLastName() {
         return lastName;
     }
@@ -83,8 +130,7 @@ public class Employee implements Person {
      *
      * @return the person's birthdate.
      */
-    @Basic
-    @Column(name = "dob", nullable = false, insertable = true, updatable = true)
+
     public Timestamp getBirthDate() {
         return birthDate;
     }
@@ -97,6 +143,18 @@ public class Employee implements Person {
         this.birthDate = birthDate;
     }
 
+
+    public String getStatus() { return status; }
+
+    public void setStatus(String val) { this.status = val; }
+
+    public List<PayPeriod> getPayPeriods() { return payPeriods; }
+
+    public void setPayPeriods(List<PayPeriod> periods) {this.payPeriods = periods; }
+
+    public List<WorkDay> getWorkDays() { return workDays; }
+
+    public void setWorkDays(List<WorkDay> days) {this.workDays = days; }
 
     @Override
     public boolean equals(Object o) {

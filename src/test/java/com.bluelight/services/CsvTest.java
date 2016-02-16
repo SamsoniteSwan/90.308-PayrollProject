@@ -1,5 +1,6 @@
 package com.bluelight.services;
 
+import com.bluelight.model.PayPeriod;
 import com.bluelight.model.PayRecord;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,4 +34,6 @@ public class CsvTest {
                 records.toString() +
                 ") TOTAL:" + records.size(),records.size() == 12);
     }
+
+
 }
