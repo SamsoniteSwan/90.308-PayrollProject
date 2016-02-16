@@ -1,5 +1,9 @@
 package com.bluelight.model;
 
+import com.bluelight.services.EmployeeService;
+import com.bluelight.services.ServiceException;
+import com.bluelight.services.ServiceFactory;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -47,6 +51,25 @@ public class Employee implements Person {
 
     public Employee() {
         //empty constructor required by Hibernate
+    }
+
+    public Employee(String id) {
+        this.employeeId = id;
+        try {
+            EmployeeService service = ServiceFactory.getDBEmployeeServiceInstance();
+            List<Employee> list = service.getEmployees();
+            for (Employee ee : list) {
+                if (ee.getEmployeeId().compareTo(id) == 0) {
+                    this.firstName = ee.getFirstName();
+                    this.lastName = ee.getLastName();
+                    this.birthDate = ee.getBirthDate();
+                    this.status = ee.getStatus();
+                    break;
+                }
+            }
+        } catch (ServiceException e) {
+            //TODO - add exception handling here
+        }
     }
 
     /**

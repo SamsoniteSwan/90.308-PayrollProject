@@ -1,5 +1,6 @@
 package com.bluelight.apps;
 
+import com.bluelight.model.Employee;
 import com.bluelight.model.PayRecord;
 import com.bluelight.model.PayrollQuery;
 import com.bluelight.services.*;
@@ -137,8 +138,10 @@ public class BasicPayrollApplication {
             PayrollQuery payrollQuery = new PayrollQuery(args[0], args[1], args[2]);
             EmployeeService employeeService = ServiceFactory.getDBEmployeeServiceInstance();
             PayrollService payrollService = ServiceFactory.getDBPayrollServiceInstance();
+
             BasicPayrollApplication basicPayrollApplication =
                     new BasicPayrollApplication(employeeService);
+
             basicPayrollApplication.displayRecords(payrollQuery);
 
         } catch (ParseException e) {
@@ -154,5 +157,18 @@ public class BasicPayrollApplication {
 
         exit(exitStatus, programTerminationMessage);
         System.out.println("Oops could not parse a date");
+    }
+
+
+    public void uploadCsvToDb(String source) {
+
+        CSVImportService csvImportService = new CSVImportService();
+        List<PayRecord> records = csvImportService.importedCsvPeriod(source);
+        for (PayRecord record : records) {
+            Employee ee = new Employee(record.getEmployeeId());
+            // TODO - finish
+            //employeeService.addOrUpdateEmployee(ee);
+        }
+
     }
 }
