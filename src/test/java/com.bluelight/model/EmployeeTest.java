@@ -23,6 +23,8 @@ public class EmployeeTest {
         birthDayCalendar.set(1990, Calendar.JANUARY, 12);
     }
 
+    public static final String status = "active";
+    public static final String stringId = "012345";
     public static final String firstName = "Penelope";
     public  static final String lastName = "Cruz";
     public static final Timestamp birthDate = new Timestamp(birthDayCalendar.getTimeInMillis());
@@ -36,9 +38,12 @@ public class EmployeeTest {
      */
     public static Employee createEmployee() {
         Employee employee = new Employee();
+        employee.setEmployeeId(stringId);
         employee.setBirthDate(birthDate);
         employee.setFirstName(firstName);
         employee.setLastName(lastName);
+        employee.setStatus(status);
+
         return employee;
     }
 
@@ -49,9 +54,11 @@ public class EmployeeTest {
 
     @Test
     public void testPersonGettersAndSetters() {
+        assertEquals("employeeId matches", stringId, testEmployee.getEmployeeId());
         assertEquals("first name matches", firstName, testEmployee.getFirstName());
         assertEquals("last name matches", lastName, testEmployee.getLastName());
         assertEquals("birthday matches", birthDate, testEmployee.getBirthDate());
+        assertEquals("status matches", status, testEmployee.getStatus());
     }
 
     @Test

@@ -18,6 +18,7 @@ public class BasicPayrollApplication {
 
     private CSVImportService csvImportService;
     private PayrollService payrollService;
+    private EmployeeService employeeService;
 
     /**
      * An enumeration that indicates how the program terminates (ends)
@@ -86,6 +87,18 @@ public class BasicPayrollApplication {
     }
 
     /**
+     * Create a new Application.
+     *
+     * @param employeeService the StockService this application instance should use for
+     *                     stock queries.
+     *                     <p/>
+     *                     NOTE: this is a example of Dependency Injection in action.
+     */
+    public BasicPayrollApplication(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
+
+    /**
      * Given a <CODE>stockQuery</CODE> get back a the info about the stock to display to th user.
      *
      * @param payrollQuery the stock to get data for.
@@ -122,9 +135,10 @@ public class BasicPayrollApplication {
         try {
 
             PayrollQuery payrollQuery = new PayrollQuery(args[0], args[1], args[2]);
+            EmployeeService employeeService = ServiceFactory.getDBEmployeeServiceInstance();
             PayrollService payrollService = ServiceFactory.getDBPayrollServiceInstance();
             BasicPayrollApplication basicPayrollApplication =
-                    new BasicPayrollApplication(payrollService);
+                    new BasicPayrollApplication(employeeService);
             basicPayrollApplication.displayRecords(payrollQuery);
 
         } catch (ParseException e) {

@@ -14,8 +14,17 @@ public class ServiceFactory {
     private ServiceFactory() {}
 
     /**
-     * @return get a <CODE>DatabaseStockService</CODE> instance
+     * @return get a DatabasePayrollService instance
      */
     public static PayrollService getDBPayrollServiceInstance() { return new DatabasePayrollService(); }
 
+    /**
+     * @return get a DatabaseEmployeeService instance
+     */
+    public static EmployeeService getDBEmployeeServiceInstance() { return new DatabaseEmployeeService(); }
+
+    /**
+     * @return get DatabaseWorkdayService instance
+     */
+    public static WorkdayService getDBWorkdayServiceInstance() { return new DatabaseWorkdayService(); }
 }
