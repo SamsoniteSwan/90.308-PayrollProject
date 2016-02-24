@@ -6,6 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -18,14 +20,13 @@ import java.sql.Timestamp;
 @Table(name = "tblPayPeriods")
 public class PayPeriod implements Serializable {
 
-    public static double taxRate = .20;
+    public static final double TAX_RATE = .20;
+    public static final BigDecimal VACATION_RATE = new BigDecimal(0.075);
 
-     //(strategy = GenerationType.IDENTITY)
-    //@Column(name = "id", unique = true, nullable = false)
      @Id
      @GeneratedValue
      private int id;
-    //private ArrayList<WorkDay> days;
+
     @Basic
     @Column(name = "startDate", nullable = false, insertable = true, updatable = true)
     private Timestamp startDay;
@@ -38,11 +39,24 @@ public class PayPeriod implements Serializable {
     @Column(name = "wage", nullable = false, insertable = true, updatable = true)
     private BigDecimal hourlyRate;
 
-    //@OneToOne(mappedBy="payPeriods",  fetch = FetchType.LAZY)
     @ManyToOne
     @JoinColumn(name="employee")
     private Employee employee;
 
+    //@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    //private List<WorkDay> workDays;
+
+    //public List<WorkDay> getWorkDays() {
+    //    return workDays;
+    //}
+
+    //public void setWorkDays (List<WorkDay> days) {
+    //    this.workDays = days;
+    //}
+
+
+    //private BigDecimal vacationEarned;
+    //private BigDecimal vacationUsed;
 
     public PayPeriod() {
         //empty constructor required by Hibernate
@@ -102,6 +116,24 @@ public class PayPeriod implements Serializable {
         this.endDay = endDate;
     }
 
+
+    public List<WorkDay> dayList (ArrayList<WorkDay> set) {
+        List<WorkDay> result = new ArrayList<>();
+        for (WorkDay day : set) {
+            if (day.getDate().compareTo(this.getStartDay()) >= 0 &&
+                    day.getDate().compareTo(this.getEndDay()) <= 0) {
+                result.add(day);
+            }
+        }
+        return result;
+    }
+
+    public boolean hasDay (WorkDay day) {
+        if (day.getDate().after(startDay) && day.getDate().before(endDay)) {
+            return true;
+        }
+        return false;
+    }
     /**
      *
      * @return Gross pay (before taxes)... wage * hours
@@ -115,7 +147,7 @@ public class PayPeriod implements Serializable {
      * @return Amount of taxes withheld during the pay period
      */
     //public BigDecimal taxesWithheld() {
-    //    return grossPay().multiply(new BigDecimal(taxRate));
+    //    return grossPay().multiply(new BigDecimal(TAX_RATE));
     //}
 
     //public BigDecimal takeHomePay() {

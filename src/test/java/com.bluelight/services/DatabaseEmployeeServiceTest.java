@@ -2,6 +2,7 @@ package com.bluelight.services;
 
 import com.bluelight.model.*;
 import com.bluelight.utils.DatabaseUtils;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,12 +17,14 @@ import static org.junit.Assert.assertTrue;
  * DatabaseEmployeeServiceTest
  *
  * @author Jeremy Swanson (jeremy at jlswanson.com)
- * @version 1, 2/14/2016
+ * @version 2, 2/23/2016
  */
 public class DatabaseEmployeeServiceTest {
 
     private EmployeeService employeeService;
     private Employee testEmployee;
+    public static final DateTime min = new DateTime(1900,1,1,1,1);
+    public static final DateTime max = new DateTime(2100,1,1,1,1);
 
     /**
      * Initializes the database from the initialization file
@@ -49,9 +52,6 @@ public class DatabaseEmployeeServiceTest {
         boolean found = false;
 
         for (Employee employee : eeList) {
-            //Timestamp returnedBirthDate = employee.getBirthDate();
-            //Calendar returnCalendar = Calendar.getInstance();
-            //returnCalendar.setTimeInMillis(returnedBirthDate.getTime());
             if (employee.getEmployeeId().compareTo(EmployeeTest.stringId)== 0) {
                 found = true;
                 break;
@@ -75,10 +75,13 @@ public class DatabaseEmployeeServiceTest {
     @Test
     public void addOrUpdateWorkdayTest() throws ServiceException {
 
+
         employeeService.addOrUpdateEmployee(testEmployee);
-        List<WorkDay> startList = employeeService.getWorkdays(testEmployee);
-        employeeService.addWorkDay(testEmployee, WorkDayTest.createStandardWorkDay());
-        List<WorkDay> endList = employeeService.getWorkdays(testEmployee);
+        List<WorkDay> startList = employeeService.getWorkdays(testEmployee.getEmployeeId(),
+                min,
+                max);
+        employeeService.addOrUpdateWorkday(WorkDayTest.createStandardWorkDay(), testEmployee);
+        List<WorkDay> endList = employeeService.getAllWorkdays(testEmployee);
 
 
         assertTrue("startct=" + startList.size() + "; endct=" + endList.size(), startList.size() < endList.size());

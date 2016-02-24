@@ -5,9 +5,11 @@ import com.opencsv.bean.CsvBind;
 import org.joda.time.DateTime;
 import com.bluelight.utils.DateTimeParser;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.ParseException;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -20,13 +22,34 @@ import java.util.logging.Logger;
  */
 public class PayRecord extends PayrollData {
 
-    @CsvBind
-    private String period;
-    @CsvBind
-    private String employeeId;
+
 
     private int id;
 
+   @CsvBind
+    private String period;
+
+    @CsvBind
+    private String employeeId;
+
+
+    @CsvBind
+    private String employeeFirst;
+
+    @CsvBind
+    private String employeeLast;
+
+    @CsvBind
+    private String wage;
+
+    @CsvBind
+    private String hoursWorked;
+
+    @CsvBind
+    private String vacationUsed;
+/*
+    @ManyToOne
+    @JoinColumn(name="employeeId")*/
     private Employee employee;
 
     public PayRecord() {
@@ -45,14 +68,28 @@ public class PayRecord extends PayrollData {
      *
      * @return get the employee
      */
-    @ManyToOne
-    @JoinColumn(name = "person_Id", referencedColumnName = "person_Id", nullable = false)
-    public Person getEmployee() {
-        return employee;
+    public Employee getEmployee() {
+
+        Employee ee = new Employee();
+        ee.setEmployeeId(employeeId);
+        ee.setFirstName(employeeFirst);
+        ee.setLastName(employeeLast);
+        ee.setBirthDate(new Timestamp(Employee.DEFAULT_BIRTHDAY.getTimeInMillis()));
+        ee.setStatus(Employee.DEFAULT_STATUS);
+        this.setEmployee(ee);
+        //employee.setEmployeeId(employeeId);
+        //employee.setFirstName(employeeFirst);
+        //employee.setLastName(employeeLast);
+        //employee.setBirthDate(new Timestamp(Employee.DEFAULT_BIRTHDAY.getTimeInMillis()));
+        //employee.setStatus("active");
+
+        return ee;
     }
 
+    //public Employee getEmployee() { return employee; }
+
     /**
-     * Specify the Person associated with a stock.
+     * Specify the Employee associated with the record.
      *
      * @param employee an employee instance
      */
@@ -63,18 +100,19 @@ public class PayRecord extends PayrollData {
     /**
      * Create a new instance of a PayRecord.
      *
-     * @param employeeId  ID of the employee
-     * @param period   String consisting of start and end date
+     * @param //employeeId  ID of the employee
+     * @param //period   String consisting of start and end date
      *                 (will later need to be parsed)
      */
-    public PayRecord(String employeeId, String period) {
+
+    public PayRecord(String employeeId, String period)  {
         super();
+        this.employee = new Employee();
+        this.employee.setEmployeeId(employeeId);
         this.employeeId = employeeId;
         this.period = period;
-        /*this.setCompany(company);
-        this.symbol = company.getSymbol();
-        */
     }
+
 
     public DateTime startDate() {
         DateTime result = new DateTime();
@@ -91,15 +129,24 @@ public class PayRecord extends PayrollData {
         try {
             result = DatabaseUtils.makeDateTimeFromString(DateTimeParser.startAndEnd(period).get(1));
         } catch (ParseException e) {
-            Logger.getGlobal().warning("could not parse end date:" + e.getMessage());
+
         }
         return result;
     }
 
+    public String getEmployeeFirst() { return employeeFirst; }
+
+    public String getEmployeeLast() { return employeeLast; }
+
+    public String getWage() { return wage; }
+
+    public float getHoursWorked() { return Float.parseFloat(hoursWorked); }
+
+    public float getVacationUsed() { return Float.parseFloat(vacationUsed); }
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (employeeId != null ? employeeId.hashCode() : 0);
+        result = 31 * result + (employee != null ? employee.hashCode() : 0);
         result = 31 * result + (period != null ? period.hashCode() : 0);
         return result;
     }
@@ -109,7 +156,10 @@ public class PayRecord extends PayrollData {
 
         return "PayrollRecord{" +
                 "id=" + id +
+                ", employeeString=" + employee.toString() +
+                /*
                 ", employeeId=" + employeeId +
+                ", employeeName=" + employeeFirst + " " + employeeLast + */
                 ", period='" + period + '\'' +
                 '}';
     }

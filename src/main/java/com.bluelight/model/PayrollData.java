@@ -20,7 +20,7 @@ public abstract class PayrollData {
     public static final String dateFormat = "YYYY-MM-dd HH:mm:ss";
 
     /**
-     * Base constructor for StockData classes.
+     * Base constructor for PayrollData classes.
      * Initialize member data that is shared with sub classes.
      */
 

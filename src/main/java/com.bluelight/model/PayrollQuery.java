@@ -5,6 +5,8 @@ import org.joda.time.Instant;
 
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * PayrollQuery
@@ -14,8 +16,6 @@ import java.text.ParseException;
  */
 public class PayrollQuery extends PayrollData {
     private final String employeeId;
-    private final Employee employee;
-    private final String period;
     private final Instant from;
     private final Instant until;
 
@@ -34,19 +34,9 @@ public class PayrollQuery extends PayrollData {
         this.employeeId = employeeId;
         this.from = dateTimeFormatter.parseDateTime(from).toInstant();
         this.until = dateTimeFormatter.parseDateTime(until).toInstant();
-        this.period = "NO Value";
-        employee = new Employee(employeeId);
+
     }
 
-    public PayrollQuery(@NotNull String employeeId, @NotNull String period) throws ParseException {
-        super();
-
-        this.employeeId = employeeId;
-        this.period = period;
-        this.from = new Instant();
-        this.until = new Instant();
-        employee = new Employee(employeeId);
-    }
 
     /**
      * @return get the stock symbol associated with this query
@@ -54,10 +44,6 @@ public class PayrollQuery extends PayrollData {
     public String getEmployeeId() {
         return employeeId;
     }
-
-    public Employee getEmployee() { return  employee; }
-
-    public String getPeriod() { return period; }
 
     /**
      * @return get the start Calendar associated with this query

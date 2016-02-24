@@ -2,8 +2,11 @@ package com.bluelight.model;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import javax.validation.constraints.AssertTrue;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import static org.junit.Assert.assertEquals;
@@ -32,7 +35,7 @@ public class EmployeeTest {
     private Employee testEmployee;
 
     /**
-     * Testing helper method for generating Person test data
+     * Testing helper method for generating Employee test data
      *
      * @return an Employee object that uses static constants for data.
      */
@@ -62,13 +65,27 @@ public class EmployeeTest {
     }
 
     @Test
+    public void testCollectionGettersAndSetters() {
+        // Add a number of mock PayPeriods
+        PayPeriod mockPeriod = Mockito.mock(PayPeriod.class);
+        ArrayList<PayPeriod> mockPeriodList = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            mockPeriodList.add(mockPeriod);
+        }
+        testEmployee.setPayPeriods(mockPeriodList);
+        assertTrue("employee has " + mockPeriodList.size(),
+                testEmployee.getPayPeriods().size() == 5);
+    }
+
+    @Test
     public void testEquals() {
-        assertTrue("both quotes are equal", testEmployee.equals(createEmployee()));
+        assertTrue("both employee instances are the same",
+                testEmployee.equals(createEmployee()));
     }
 
     @Test
     public void testHashCode() {
-        assertTrue("quote has hash value", testEmployee.hashCode() != 0);
+        assertTrue("employee has hash value", testEmployee.hashCode() != 0);
     }
 
     @Test

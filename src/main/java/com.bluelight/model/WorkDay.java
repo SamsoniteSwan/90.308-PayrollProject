@@ -1,5 +1,6 @@
 package com.bluelight.model;
 
+import com.bluelight.services.DatabaseEmployeeService;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
@@ -24,6 +25,10 @@ public class WorkDay {
     @JoinColumn(name="employee")
     private Employee employee;
 
+    //@ManyToOne
+    //@JoinColumn(name="period")
+    //private PayPeriod period;
+
     @Basic
     @Column(name = "workday", nullable = false, insertable = true, updatable = true)
     private Timestamp day;
@@ -31,6 +36,10 @@ public class WorkDay {
     @Basic
     @Column(name = "hours", nullable = false, insertable = true, updatable = true)
     private BigDecimal hoursWorked;
+
+    @Basic
+    @Column(name = "vacationhrs", nullable = false, insertable = true, updatable = true)
+    private BigDecimal vacationUsed;
 
     public WorkDay() {
         //empty constructor required by Hibernate
@@ -40,6 +49,12 @@ public class WorkDay {
         hoursWorked = hours;
     }
 
+    public WorkDay(String eeId, Timestamp day, BigDecimal hrsWorked, BigDecimal hrsVaca) {
+        this.employee = new Employee(eeId);
+        this.day = day;
+        this.hoursWorked = hrsWorked;
+        this.vacationUsed = hrsVaca;
+    }
     /**
      * Primary Key - Unique ID for a particular row in the tbl_Favorites table.
      *
@@ -75,6 +90,11 @@ public class WorkDay {
         this.employee = ee;
     }
 
+    //public PayPeriod getPeriod() { return period; }
+
+    //public void setPeriod(PayPeriod payPeriod) {
+    //    this.period = payPeriod;
+    //}
 
     /**
      * @return the number of hours worked in the pay period.
@@ -85,6 +105,17 @@ public class WorkDay {
 
     public void setHoursWorked(BigDecimal hours) {
         hoursWorked = hours;
+    }
+
+    /**
+     * @return the number of hours worked in the pay period.
+     */
+    public BigDecimal getVacationUsed() {
+        return vacationUsed;
+    }
+
+    public void setVacationUsed(BigDecimal hours) {
+        vacationUsed = hours;
     }
 
     /**
@@ -102,6 +133,12 @@ public class WorkDay {
         this.day = date;
     }
 
+    @Override
+    public String toString() {
+        return "Employee " + getEmployee().getEmployeeId() +
+                " worked " + getHoursWorked() + " hours on " +
+                getDate();
+    }
     @Override
     public int hashCode() {
         int result = id;
