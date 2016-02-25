@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class CsvTest {
 
-    public static String TestCSVFile = "./src/main/resources/Payroll - Sheet1.csv";
+    public static String TestCSVFile = "./src/main/resources/Payroll-Sheet1.csv";
 
     CSVImportService service;
 
