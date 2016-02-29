@@ -2,9 +2,16 @@
 package com.bluelight.apps;
 
 import com.bluelight.apps.BasicPayrollApplication;
-import com.bluelight.services.PayrollService;
+import com.bluelight.model.Employee;
+import com.bluelight.services.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import static org.junit.Assert.assertNotNull;
@@ -19,12 +26,12 @@ import static org.junit.Assert.assertNotNull;
 public class PayrollApplicationTest {
 
     private BasicPayrollApplication app;
-    private PayrollService prServiceMock;
+    private EmployeeService employeeService;
 
     @Before
     public void setUp() {
-        prServiceMock = mock(PayrollService.class);
-        app = new BasicPayrollApplication(prServiceMock);
+        employeeService = mock(EmployeeService.class);
+        app = new BasicPayrollApplication(employeeService);
     }
 
     @Test
@@ -32,5 +39,7 @@ public class PayrollApplicationTest {
 
         assertNotNull(app);
     }
+
+
 
 }

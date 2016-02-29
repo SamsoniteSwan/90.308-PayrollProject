@@ -1,15 +1,24 @@
 package com.bluelight.services;
 
 import com.bluelight.model.Employee;
+import com.bluelight.model.PayPeriod;
 import com.bluelight.model.PayRecord;
+import com.bluelight.model.WorkDay;
+import com.bluelight.utils.DatabaseUtils;
+import com.bluelight.utils.DateTimeParser;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.*;
+import org.joda.time.DateTime;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * CSVImportService
@@ -29,60 +38,103 @@ public class CSVImportService {
         HashMap<String, String> result = new HashMap<>();
         result.put("Period", "Period");
         result.put("Employee ID", "employeeId");
+        result.put("First Name", "employeeFirst");
+        result.put("Last Name", "employeeLast");
+        result.put("Hourly Rate", "wage");
+        result.put("Number of hours worked this period", "hoursWorked");
+        result.put("Vacation used", "vacationUsed");
         return result;
     }
 
+
     /**
-     * Helper method for creating the csv reader
-     * @param fileSource
-     * @return
+     * Map each line in csv file to PayRecord object
+     *
+     * @param fileSource string path to csv file
+     *
+     * @return a list of PayRecord instances created
      */
-    public CSVReader getReader(String fileSource) {
-        CSVReader reader = null;
-        try {
-            reader = new CSVReader(new FileReader(fileSource));
-        } catch (java.io.FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return reader;
-    }
+    public List<PayRecord> loadCsvPeriods(String fileSource) throws FileNotFoundException {
 
-    public List importedCsv(String fileSource) {
-        ColumnPositionMappingStrategy strat = new ColumnPositionMappingStrategy();
-        strat.setType(Employee.class);
-        // the fields to bind to in your JavaBean
-        String[] columns = new String[] {"First Name", "Last Name", "id"};
-
-        strat.setColumnMapping(columns);
-
-        CsvToBean csv = new CsvToBean();
-        return csv.parse(strat, getReader(fileSource));
-    }
-
-    public List importedCsvPeriod(String fileSource) {
-
-        //HeaderColumnNameMappingStrategy<PayRecord> strat = new HeaderColumnNameMappingStrategy<>();
         HeaderColumnNameTranslateMappingStrategy<PayRecord> strat = new HeaderColumnNameTranslateMappingStrategy<>();
         strat.setType(PayRecord.class);
         strat.setColumnMapping(columnMap());
         CsvToBean<PayRecord> csvToBean = new CsvToBean<>();
-        List<PayRecord> recordList = csvToBean.parse(strat, getReader(fileSource));
+        List<PayRecord> recordList = csvToBean.parse(strat, new CSVReader(new FileReader(fileSource)));
 
+
+        for (PayRecord rec : recordList) {
+            rec.setEmployee(rec.getEmployee());
+        }
         return recordList;
     }
 
+    /**
+     * read a csv file and copy the values into the database.
+     *
+     * @param source string path to csv file.
+     */
+    public void uploadCsvToDb(String source) throws FileNotFoundException, ServiceException {
 
-    public void importCSV(String fileSource) {
-        CSVReader reader = null;
-        List values = new ArrayList<String>();
-        try {
-            reader = new CSVReader(new FileReader(fileSource));
-            values = reader.readAll();
+        DatabaseEmployeeService eeService = new DatabaseEmployeeService();
+        List<PayRecord> records = loadCsvPeriods(source);
 
-        } catch (java.io.IOException e) {
+        for (PayRecord record : records) {
 
-                e.printStackTrace();
+            Employee ee = record.getEmployee();
+
+            eeService.addOrUpdateEmployee(ee);
+
+            /*
+            * establish PayPeriod instace
+             */
+            PayPeriod period = new PayPeriod();
+            List<String> startandend = DateTimeParser.startAndEnd(record.getPeriod());
+            Timestamp startstamp = null;
+            Timestamp endstamp = null;
+            try {
+                startstamp = new Timestamp(DatabaseUtils.makeDateTimeFromString(startandend.get(0)).getMillis());
+                endstamp = new Timestamp(DatabaseUtils.makeDateTimeFromString(startandend.get(1)).getMillis());
+            } catch (ParseException e) {
+                Logger.getGlobal().warning("could not parse dates:" + e.getMessage());
             }
+
+
+            period.setEmployee(ee);
+            period.setStartDay(startstamp);
+            period.setEndDay(endstamp);
+            period.setHourlyRate(new BigDecimal(record.getWage()));
+            eeService.addPayPeriod(period, ee);
+            ee.setPayPeriods(new ArrayList<>());
+            ee.getPayPeriods().add(period);
+
+
+            // establish Worklog days
+            int dayct = (int)(endstamp.getTime() - startstamp.getTime()) / (1000 * 60 * 60 * 24);
+            float hrsPerDay = record.getHoursWorked()/dayct;
+            float vacaPerDay = record.getVacationUsed()/dayct;
+
+            DateTime endDay = new DateTime(endstamp);
+            DateTime curDay = new DateTime(startstamp);
+
+            ee.setWorkDays(new ArrayList<>());
+
+            while (endDay.isAfter(curDay) || endDay.isEqual(curDay)) {
+                WorkDay day = new WorkDay();
+                day.setEmployee(ee);
+                day.setDate(new Timestamp(curDay.getMillis()));
+                day.setHoursWorked(new BigDecimal(hrsPerDay));
+                day.setVacationUsed(new BigDecimal(vacaPerDay));
+
+                eeService.addWorkDay(ee, day);
+
+                ee.getWorkDays().add(day);
+                curDay = curDay.plusDays(1);
+            }
+
+            eeService.addOrUpdateEmployee(ee);
+        }
+
     }
 
 }

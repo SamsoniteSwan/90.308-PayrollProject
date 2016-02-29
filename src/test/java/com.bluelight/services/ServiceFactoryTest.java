@@ -13,8 +13,8 @@ import static org.junit.Assert.assertNotNull;
 public class ServiceFactoryTest {
 
     @Test
-    public void testGetDBStockInstance() {
-        PayrollService payrollService = ServiceFactory.getDBPayrollServiceInstance();
+    public void testGetDBEmployeeInstance() {
+        EmployeeService payrollService = ServiceFactory.getDBEmployeeServiceInstance();
         assertNotNull(payrollService);
     }
 

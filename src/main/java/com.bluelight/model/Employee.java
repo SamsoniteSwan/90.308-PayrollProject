@@ -5,11 +5,9 @@ import com.bluelight.services.ServiceException;
 import com.bluelight.services.ServiceFactory;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Employee
@@ -19,7 +17,15 @@ import java.util.Set;
  */
 @Entity
 @Table(name="tblEmployees")
-public class Employee implements Person {
+public class Employee {
+
+
+    public static final String DEFAULT_STATUS = "active";
+    public static final Calendar DEFAULT_BIRTHDAY = Calendar.getInstance();
+
+    static {
+        DEFAULT_BIRTHDAY.set(1900, Calendar.JANUARY, 1);
+    }
 
     @Id
     @Column(name = "employeeId", nullable = false, insertable = true, updatable = true)
@@ -31,21 +37,16 @@ public class Employee implements Person {
     @Column(name = "lastName", nullable = false, insertable = true, updatable = true, length = 100)
     private String lastName;
     @Basic
-    @Column(name = "dob", nullable = false, insertable = true, updatable = true)
+    @Column(name = "dob", insertable = true, updatable = true)
     private Timestamp birthDate;
 
     @Basic
     @Column(name = "status", nullable = false, insertable = true, updatable = true, length = 20)
     private String status;
-    //private ArrayList<PayPeriod> payHistory;
+
     @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private List<WorkDay> workDays;
 
-    //@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-    //@JoinTable(name = "tblPayPeriods",
-    //        joinColumns = { @JoinColumn(name = "employeeId") }, inverseJoinColumns = { @JoinColumn(name = "id") })
-    //@Column
-    //@ElementCollection(targetClass=PayPeriod.class)
     @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PayPeriod> payPeriods;
 
@@ -161,13 +162,13 @@ public class Employee implements Person {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Person person = (Person) o;
+        Employee employee = (Employee) o;
 
-        if (birthDate != null ? !birthDate.equals(person.getBirthDate()) : person.getBirthDate() != null)
+        if (birthDate != null ? !birthDate.equals(employee.getBirthDate()) : employee.getBirthDate() != null)
             return false;
-        if (firstName != null ? !firstName.equals(person.getFirstName()) : person.getFirstName() != null)
+        if (firstName != null ? !firstName.equals(employee.getFirstName()) : employee.getFirstName() != null)
             return false;
-        if (lastName != null ? !lastName.equals(person.getLastName()) : person.getLastName() != null)
+        if (lastName != null ? !lastName.equals(employee.getLastName()) : employee.getLastName() != null)
             return false;
 
         return true;
@@ -184,7 +185,7 @@ public class Employee implements Person {
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "Employee{" +
                 "employeeId=" + employeeId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

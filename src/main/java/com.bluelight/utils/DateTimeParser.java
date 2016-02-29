@@ -70,7 +70,11 @@ public class DateTimeParser {
 
     public static ArrayList<String> startAndEnd(String bothDates) {
         String[] dateparts = bothDates.split("-");
-        return new ArrayList<>(Arrays.asList(dateparts));
+        ArrayList<String> result = new ArrayList<>();
+        for (String st : dateparts) {
+            result.add(fromString(st));
+        }
+        return result;
     }
 
 }

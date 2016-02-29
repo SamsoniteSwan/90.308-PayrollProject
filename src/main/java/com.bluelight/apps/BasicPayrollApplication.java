@@ -1,13 +1,17 @@
 package com.bluelight.apps;
 
-import com.bluelight.model.Employee;
-import com.bluelight.model.PayRecord;
-import com.bluelight.model.PayrollQuery;
+import com.bluelight.model.*;
 import com.bluelight.services.*;
+import com.bluelight.utils.DatabaseUtils;
+import com.bluelight.utils.DateTimeParser;
 import com.bluelight.utils.Interval;
+import org.joda.time.DateTime;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * BasicPayrollApplication
@@ -18,7 +22,6 @@ import java.util.List;
 public class BasicPayrollApplication {
 
     private CSVImportService csvImportService;
-    private PayrollService payrollService;
     private EmployeeService employeeService;
 
     /**
@@ -78,20 +81,8 @@ public class BasicPayrollApplication {
     /**
      * Create a new Application.
      *
-     * @param prService the StockService this application instance should use for
-     *                     stock queries.
-     *                     <p/>
-     *                     NOTE: this is a example of Dependency Injection in action.
-     */
-    public BasicPayrollApplication(PayrollService prService) {
-        this.payrollService = prService;
-    }
-
-    /**
-     * Create a new Application.
-     *
      * @param employeeService the StockService this application instance should use for
-     *                     stock queries.
+     *                     payroll queries.
      *                     <p/>
      *                     NOTE: this is a example of Dependency Injection in action.
      */
@@ -100,26 +91,20 @@ public class BasicPayrollApplication {
     }
 
     /**
-     * Given a <CODE>stockQuery</CODE> get back a the info about the stock to display to th user.
+     * Given a <CODE>PayrollQuery</CODE> get back a the info about the stock to display to th user.
      *
      * @param payrollQuery the stock to get data for.
      * @return a String with the stock data in it.
      * @throws ServiceException If data about the stock can't be retrieved. This is a
      *                               fatal error.
      */
-    public String displayRecords(PayrollQuery payrollQuery) throws ServiceException {
+    public String displayDayRecords(PayrollQuery payrollQuery) throws ServiceException {
         StringBuilder stringBuilder = new StringBuilder();
 
-        List<PayRecord> payRecords =
-                payrollService.getRecords(payrollQuery.getEmployeeId());
-        /*,
-                        payrollQuery.getFrom(),
-                        payrollQuery.getUntil(),
-                        Interval.DAY); // get one quote for each day in the from until date range.
-*/
-        stringBuilder.append("Stock quotes for: " + payrollQuery.getEmployeeId() + "\n");
-        for (PayRecord record : payRecords) {
-            stringBuilder.append(record.toString());
+        List<WorkDay> days = employeeService.getWorkdays(payrollQuery.getEmployeeId(), payrollQuery.getFrom(), payrollQuery.getUntil());
+        stringBuilder.append("Pay Periods for: " + payrollQuery.getEmployeeId() + "\n");
+        for (WorkDay day : days) {
+            stringBuilder.append(day.toString());
         }
 
         return stringBuilder.toString();
@@ -137,12 +122,11 @@ public class BasicPayrollApplication {
 
             PayrollQuery payrollQuery = new PayrollQuery(args[0], args[1], args[2]);
             EmployeeService employeeService = ServiceFactory.getDBEmployeeServiceInstance();
-            PayrollService payrollService = ServiceFactory.getDBPayrollServiceInstance();
 
             BasicPayrollApplication basicPayrollApplication =
                     new BasicPayrollApplication(employeeService);
 
-            basicPayrollApplication.displayRecords(payrollQuery);
+            basicPayrollApplication.displayDayRecords(payrollQuery);
 
         } catch (ParseException e) {
             exitStatus = ProgramTerminationStatusEnum.ABNORMAL;
@@ -160,15 +144,5 @@ public class BasicPayrollApplication {
     }
 
 
-    public void uploadCsvToDb(String source) {
 
-        CSVImportService csvImportService = new CSVImportService();
-        List<PayRecord> records = csvImportService.importedCsvPeriod(source);
-        for (PayRecord record : records) {
-            Employee ee = new Employee(record.getEmployeeId());
-            // TODO - finish
-            //employeeService.addOrUpdateEmployee(ee);
-        }
-
-    }
 }

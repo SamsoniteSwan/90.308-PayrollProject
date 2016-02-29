@@ -58,7 +58,7 @@ public class PayPeriodTest {
     @Test
     public void testPayCalculations() {
         //BigDecimal expectedGrossPay = TEST_WAGE.multiply(TEST_HOURS);
-        //BigDecimal expectedTaxesWithheld = expectedGrossPay.multiply(new BigDecimal(PayPeriod.taxRate));
+        //BigDecimal expectedTaxesWithheld = expectedGrossPay.multiply(new BigDecimal(PayPeriod.TAX_RATE));
         //assertTrue("test the gross pay: testperiod", testPeriod.grossPay().equals(expectedGrossPay));
         //assertTrue("test the tax rate", testPeriod.taxesWithheld().equals(expectedTaxesWithheld));
         //assertTrue("test take home pay", testPeriod.takeHomePay().equals(expectedGrossPay.subtract(expectedTaxesWithheld)));

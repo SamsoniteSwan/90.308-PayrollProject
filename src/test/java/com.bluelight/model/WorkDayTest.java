@@ -27,8 +27,10 @@ public class WorkDayTest {
     public static WorkDay createStandardWorkDay() {
         WorkDay day = new WorkDay();
         day.setEmployee(EmployeeTest.createEmployee());
+        //day.setPeriod(PayPeriodTest.samplePeriod());
         day.setHoursWorked(STANDARDDAY_HOURS);
         day.setDate(FIRSTTEST_DAY);
+        day.setVacationUsed(new BigDecimal(2.0));
         return day;
     }
 
@@ -36,7 +38,7 @@ public class WorkDayTest {
     public void testWorkdayGettersAndSetters() {
         WorkDay day = createStandardWorkDay();
         assertEquals("8 hours worked", STANDARDDAY_HOURS, day.getHoursWorked());
-        assertEquals("8 hours worked", FIRSTTEST_DAY, day.getDate());
+        assertEquals("Date is correct", FIRSTTEST_DAY, day.getDate());
 
     }
 }
