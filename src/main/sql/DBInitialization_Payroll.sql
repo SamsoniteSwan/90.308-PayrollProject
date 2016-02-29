@@ -1,4 +1,5 @@
-/* TODO - create payroll database */
+CREATE SCHEMA IF NOT EXISTS payroll;
+
 /* Clean database tables */
 DROP TABLE IF EXISTS payroll.tblPayPeriods CASCADE;
 DROP TABLE IF EXISTS payroll.tblWorkLog CASCADE;
@@ -6,6 +7,7 @@ DROP TABLE IF EXISTS payroll.tblEmployees CASCADE;
 DROP TABLE IF EXISTS payroll.tblRecords CASCADE;
 
 
+GRANT ALL ON *.* TO 'monty'@'localhost' IDENTIFIED BY 'some_pass';
 
 CREATE TABLE payroll.tblEmployees(
    employeeId VARCHAR(10) NOT NULL,
@@ -16,12 +18,11 @@ CREATE TABLE payroll.tblEmployees(
    PRIMARY KEY (employeeId)
 );
 
-/* daily hours. Foreign key from employeeID, or payPeriod ID (or both)? */
 CREATE TABLE payroll.tblWorkLog(
    id INT NOT NULL AUTO_INCREMENT,
    workday DATETIME NOT NULL,
    employee VARCHAR(10) NOT NULL,
-   hours DECIMAL NOT NULL,
+   hours DECIMAL(4, 2) NOT NULL,
    vacationhrs DECIMAL NOT NULL,
    FOREIGN KEY (employee) REFERENCES tblEmployees(employeeId),
    PRIMARY KEY (id)
@@ -29,7 +30,7 @@ CREATE TABLE payroll.tblWorkLog(
 
 CREATE TABLE payroll.tblPayPeriods(
    id INT NOT NULL AUTO_INCREMENT,
-   wage DECIMAL NOT NULL,
+   wage DECIMAL(5, 2) NOT NULL,
    startDate DATETIME NOT NULL,
    endDate DATETIME NOT NULL,
    employee VARCHAR(10) NOT NULL,

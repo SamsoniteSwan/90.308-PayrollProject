@@ -33,7 +33,7 @@ public class DatabaseUtilsTest {
     public void testGetConnectionWorks() throws Exception{
         Connection connection = DatabaseUtils.getConnection();
         Statement statement = connection.createStatement();
-        boolean execute = statement.execute("select * from tblRecords");
+        boolean execute = statement.execute("select * from payroll.tblRecords");
         assertTrue("verify that we can execute a statement",execute);
     }
 

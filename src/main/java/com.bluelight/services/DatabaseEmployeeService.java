@@ -230,7 +230,7 @@ public class DatabaseEmployeeService implements EmployeeService, WorkdayService 
             String fromString = from.toString(PayrollData.dateFormat);
             String untilString = until.toString(PayrollData.dateFormat);
 
-            String queryString = "select * from tblWorkLog where employeeId = '" + employeeId + "'"
+            String queryString = "select * from tblWorkLog where employee = '" + employeeId + "'"
                     + "and workday BETWEEN '" + fromString + "' and '" + untilString + "'";
 
             ResultSet resultSet = statement.executeQuery(queryString);
@@ -253,7 +253,7 @@ public class DatabaseEmployeeService implements EmployeeService, WorkdayService 
             throw new ServiceException(exception.getMessage(), exception);
         }
         if (workDays.isEmpty()) {
-            throw new ServiceException("There is no stock data for:" + employeeId);
+            throw new ServiceException("There are no workdays for employee ID:" + employeeId);
         }
 
 
@@ -329,19 +329,25 @@ public class DatabaseEmployeeService implements EmployeeService, WorkdayService 
         return result;
     }
 
-    public BigDecimal getTotalPay(String employeeId, DateTime from, DateTime until) throws ServiceException {
+    public BigDecimal getTotalPay(Employee employee, DateTime from, DateTime until) throws ServiceException {
         BigDecimal result = new BigDecimal(0);
-        List<PayPeriod> periods = getPayPeriods(getEmployee(employeeId));
-        List<WorkDay> days = getWorkDays(employeeId, from, until);
+        List<PayPeriod> periods = getPayPeriods(employee);
+        List<WorkDay> days = getAllWorkdays(employee);
         // loop through pay periods
         for (PayPeriod period : periods) {
 
             for (WorkDay day : days) {
                 if (period.hasDay(day)) {
-                    result.add(day.getHoursWorked().multiply(period.getHourlyRate()));
+                    BigDecimal rate = period.getHourlyRate();
+                    BigDecimal hrs = day.getHoursWorked();
+                    BigDecimal tmp = hrs.multiply(rate);
+                    result = result.add(tmp);
                 }
             }
         }
+        // round decimal value to whole cents
+        result = result.setScale(2, BigDecimal.ROUND_HALF_UP);
+
         return  result;
     }
 

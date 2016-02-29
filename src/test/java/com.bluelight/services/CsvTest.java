@@ -4,6 +4,7 @@ import com.bluelight.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,17 +31,17 @@ public class CsvTest {
     }
 
     @Test
-    public void testCsv() {
+    public void testCsv() throws FileNotFoundException {
 
-        List<PayRecord> records = service.importedCsvPeriod(TestCSVFile);
+        List<PayRecord> records = service.loadCsvPeriods(TestCSVFile);
         assertTrue("Record count should equal 12 (" +
                 records.toString() +
                 ") TOTAL:" + records.size(),records.size() == 12);
     }
 
     @Test
-    public void testGetEmployee() {
-        List<PayRecord> records = service.importedCsvPeriod(TestCSVFile);
+    public void testGetEmployee() throws FileNotFoundException {
+        List<PayRecord> records = service.loadCsvPeriods(TestCSVFile);
 
         List<Employee> employeeList = new ArrayList<>();
 
@@ -54,31 +55,36 @@ public class CsvTest {
     }
 
     @Test
-    public void testUploadCsvToDb() {
-        service.uploadCsvToDb(CsvTest.TestCSVFile);
+    public void testUploadCsvToDb() throws FileNotFoundException, ServiceException {
+        service.uploadCsvToDb(TestCSVFile);
+        DatabaseEmployeeService dbService = new DatabaseEmployeeService();
         List<Employee> ees = null;
         List<PayPeriod> payPeriods = null;
         List<WorkDay> workDays = null;
         BigDecimal pay = null;
-        try {
-            ees = new DatabaseEmployeeService().getEmployees();
-            //assertTrue("original employee count", ees.size() == 2);
-            payPeriods = new DatabaseEmployeeService().getPayPeriods(ees.get(3));
-            workDays = new DatabaseEmployeeService().getAllWorkdays(ees.get(3));
 
-            pay = new DatabaseEmployeeService().getTotalPay(ees.get(3).getEmployeeId(),
-                    DatabaseEmployeeServiceTest.min,
-                    DatabaseEmployeeServiceTest.max);
 
-        } catch (ServiceException e) {
-            Logger.getGlobal().warning("could not get employees:" + e.getMessage());
-        }
-        // 3 different employees are listed in the csv file, so 2 + 3 = 5
+        ees = dbService.getEmployees();
         assertTrue("employees added=" + ees.size(), ees.size() == 5);
-        assertTrue("payPeriods added for " + ees.get(3).toString(), payPeriods.size() == 4);
-        assertTrue("totalPay=" + pay, pay.compareTo(new BigDecimal(300))==0);
-        assertTrue("total workdays for " + ees.get(3).toString() + ": " + workDays.size(),
-                workDays.size() == 21);
+
+        Employee sampleEmployee = ees.get(3);
+        payPeriods = dbService.getPayPeriods(sampleEmployee);
+        assertTrue("payPeriods added for " + sampleEmployee.toString() + "; count=" + payPeriods.size(), payPeriods.size() == 4);
+
+        workDays = dbService.getAllWorkdays(sampleEmployee);
+        assertTrue("total workdays for " + sampleEmployee.toString() + ": " + workDays.size(),
+                workDays.size() == 59);
+
+        pay = dbService.getTotalPay(sampleEmployee,
+                DatabaseEmployeeServiceTest.min,
+                DatabaseEmployeeServiceTest.max);
+
+
+        // 3 different employees are listed in the csv file, so 2 + 3 = 5
+
+
+        assertTrue("pay for " + sampleEmployee + "; totalPay=" + pay, pay.compareTo(new BigDecimal(6303.44))==0);
+
 
     }
 }

@@ -129,7 +129,11 @@ public class PayPeriod implements Serializable {
     }
 
     public boolean hasDay (WorkDay day) {
-        if (day.getDate().after(startDay) && day.getDate().before(endDay)) {
+        DateTime start = new DateTime(startDay);
+        start = start.minusDays(1);
+        DateTime end = new DateTime(endDay);
+        //end = end.plusDays(1);
+        if (day.getDate().after(start.toDate()) && day.getDate().before(end.toDate())) {
             return true;
         }
         return false;

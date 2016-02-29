@@ -10,10 +10,12 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.*;
 import org.joda.time.DateTime;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -44,21 +46,6 @@ public class CSVImportService {
         return result;
     }
 
-    /**
-     * Helper method for creating the csv reader
-     * @param fileSource path to csv file
-     * @return a CSV Reader instance
-     */
-    public CSVReader getReader(String fileSource) {
-        CSVReader reader = null;
-        try {
-            reader = new CSVReader(new FileReader(fileSource));
-        } catch (java.io.FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return reader;
-    }
-
 
     /**
      * Map each line in csv file to PayRecord object
@@ -67,13 +54,13 @@ public class CSVImportService {
      *
      * @return a list of PayRecord instances created
      */
-    public List<PayRecord> importedCsvPeriod(String fileSource) {
+    public List<PayRecord> loadCsvPeriods(String fileSource) throws FileNotFoundException {
 
         HeaderColumnNameTranslateMappingStrategy<PayRecord> strat = new HeaderColumnNameTranslateMappingStrategy<>();
         strat.setType(PayRecord.class);
         strat.setColumnMapping(columnMap());
         CsvToBean<PayRecord> csvToBean = new CsvToBean<>();
-        List<PayRecord> recordList = csvToBean.parse(strat, getReader(fileSource));
+        List<PayRecord> recordList = csvToBean.parse(strat, new CSVReader(new FileReader(fileSource)));
 
 
         for (PayRecord rec : recordList) {
@@ -87,24 +74,16 @@ public class CSVImportService {
      *
      * @param source string path to csv file.
      */
-    public void uploadCsvToDb(String source) {
+    public void uploadCsvToDb(String source) throws FileNotFoundException, ServiceException {
 
         DatabaseEmployeeService eeService = new DatabaseEmployeeService();
-        List<PayRecord> records = importedCsvPeriod(source);
+        List<PayRecord> records = loadCsvPeriods(source);
+
         for (PayRecord record : records) {
 
             Employee ee = record.getEmployee();
-            if (ee == null) {
 
-                ee = new Employee();
-                ee.setEmployeeId(record.getEmployeeId());
-                ee.setFirstName(record.getEmployeeFirst());
-                ee.setLastName(record.getEmployeeLast());
-                ee.setStatus("active");
-                ee.setBirthDate(new Timestamp(1000));
-            }
-
-
+            eeService.addOrUpdateEmployee(ee);
 
             /*
             * establish PayPeriod instace
@@ -121,21 +100,15 @@ public class CSVImportService {
             }
 
 
+            period.setEmployee(ee);
             period.setStartDay(startstamp);
             period.setEndDay(endstamp);
             period.setHourlyRate(new BigDecimal(record.getWage()));
+            eeService.addPayPeriod(period, ee);
+            ee.setPayPeriods(new ArrayList<>());
             ee.getPayPeriods().add(period);
-            /*
-            //period.setEmployee(ee);
-            try {
-                eeService.addPayPeriod(period, ee);
 
-                eeService.addOrUpdateEmployee(ee);
-            } catch (ServiceException e) {
-                Logger.getGlobal().warning("could not add PayPeriod:" + e.getMessage());
 
-            }
-            */
             // establish Worklog days
             int dayct = (int)(endstamp.getTime() - startstamp.getTime()) / (1000 * 60 * 60 * 24);
             float hrsPerDay = record.getHoursWorked()/dayct;
@@ -144,35 +117,22 @@ public class CSVImportService {
             DateTime endDay = new DateTime(endstamp);
             DateTime curDay = new DateTime(startstamp);
 
-            while (endDay.isAfter(curDay)) {
+            ee.setWorkDays(new ArrayList<>());
+
+            while (endDay.isAfter(curDay) || endDay.isEqual(curDay)) {
                 WorkDay day = new WorkDay();
                 day.setEmployee(ee);
                 day.setDate(new Timestamp(curDay.getMillis()));
                 day.setHoursWorked(new BigDecimal(hrsPerDay));
                 day.setVacationUsed(new BigDecimal(vacaPerDay));
-                /*
-                try {
-                    eeService.addOrUpdateWorkday(day, ee);
-                    eeService.addOrUpdateEmployee(ee);
-                } catch (ServiceException e) {
-                    Logger.getGlobal().warning("could not add workday:" + e.getMessage());
-                }
-                */
+
+                eeService.addWorkDay(ee, day);
+
                 ee.getWorkDays().add(day);
                 curDay = curDay.plusDays(1);
             }
 
-            try {
-
-                eeService.addOrUpdateEmployee(ee);
-            } catch (ServiceException e) {
-
-                //TODO - add handling
-            }
-
-
-            // TODO - finish
-            //employeeService.addOrUpdateEmployee(ee);
+            eeService.addOrUpdateEmployee(ee);
         }
 
     }

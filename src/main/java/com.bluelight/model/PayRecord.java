@@ -138,7 +138,9 @@ public class PayRecord extends PayrollData {
 
     public String getEmployeeLast() { return employeeLast; }
 
-    public String getWage() { return wage; }
+    //public String getWage() { return wage; }
+
+    public float getWage() { return Float.parseFloat(wage); }
 
     public float getHoursWorked() { return Float.parseFloat(hoursWorked); }
 

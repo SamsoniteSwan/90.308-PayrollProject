@@ -131,6 +131,7 @@ public class DatabaseUtils {
             runner.runScript(reader);
             reader.close();
             connection.commit();
+            connection.close();
 
         } catch (DatabaseConnectionException | SQLException | IOException e) {
             throw new DatabaseInitializationException("Could not initialize db because of:"
