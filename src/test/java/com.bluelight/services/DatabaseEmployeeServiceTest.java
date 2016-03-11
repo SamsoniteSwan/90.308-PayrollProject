@@ -87,4 +87,13 @@ public class DatabaseEmployeeServiceTest {
         assertTrue("startct=" + startList.size() + "; endct=" + endList.size(), startList.size() < endList.size());
 
     }
+
+    /*
+    @Test
+    public void testGetAll() {
+        List<Employee> eelist = employeeService.getAll();
+        assertTrue("list size=" + eelist.size(), eelist.size() == 2);
+
+    }
+    */
 }

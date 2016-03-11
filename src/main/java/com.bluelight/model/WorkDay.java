@@ -101,6 +101,7 @@ public class WorkDay {
      */
     public BigDecimal getHoursWorked() {
         return hoursWorked;
+        //return hoursWorked.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     public void setHoursWorked(BigDecimal hours) {

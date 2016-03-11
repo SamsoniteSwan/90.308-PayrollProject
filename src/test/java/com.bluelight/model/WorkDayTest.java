@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class WorkDayTest {
 
-    public static final BigDecimal STANDARDDAY_HOURS = new BigDecimal(8.00);
+    public static final BigDecimal STANDARDDAY_HOURS = new BigDecimal(8.00).setScale(2, BigDecimal.ROUND_HALF_UP);
     public static final Calendar startCalendar = Calendar.getInstance();
 
     static {

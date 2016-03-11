@@ -84,7 +84,7 @@ public class CsvTest {
 
 
         assertTrue("pay for " + sampleEmployee + "; totalPay=" + pay, pay.compareTo(new BigDecimal(6303.44))==0);
-
+        //assertTrue("pay for " + sampleEmployee + "; totalPay=" + pay, pay.compareTo(new BigDecimal(6303.44))==0);
 
     }
 }

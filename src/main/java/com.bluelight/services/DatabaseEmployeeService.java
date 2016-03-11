@@ -330,7 +330,8 @@ public class DatabaseEmployeeService implements EmployeeService, WorkdayService 
     }
 
     public BigDecimal getTotalPay(Employee employee, DateTime from, DateTime until) throws ServiceException {
-        BigDecimal result = new BigDecimal(0);
+        BigDecimal result = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+        int resulti = 0;
         List<PayPeriod> periods = getPayPeriods(employee);
         List<WorkDay> days = getAllWorkdays(employee);
         // loop through pay periods
@@ -338,6 +339,7 @@ public class DatabaseEmployeeService implements EmployeeService, WorkdayService 
 
             for (WorkDay day : days) {
                 if (period.hasDay(day)) {
+
                     BigDecimal rate = period.getHourlyRate();
                     BigDecimal hrs = day.getHoursWorked();
                     BigDecimal tmp = hrs.multiply(rate);
@@ -348,7 +350,16 @@ public class DatabaseEmployeeService implements EmployeeService, WorkdayService 
         // round decimal value to whole cents
         result = result.setScale(2, BigDecimal.ROUND_HALF_UP);
 
+        //return String.format("%.2g%n", resulti);
         return  result;
     }
 
+    /*
+    public List getAll() {
+        //Session session = DatabaseUtils.getSessionFactory().openSession();
+        GenericDatabaseService gdbs = new GenericDatabaseService<Employee>();
+
+        return gdbs.getAll();
+    }
+    */
 }

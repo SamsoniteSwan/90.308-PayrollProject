@@ -20,8 +20,8 @@ import java.util.List;
 @Table(name = "tblPayPeriods")
 public class PayPeriod implements Serializable {
 
-    public static final double TAX_RATE = .20;
-    public static final BigDecimal VACATION_RATE = new BigDecimal(0.075);
+    public static final BigDecimal TAX_RATE = new BigDecimal(".20");
+    public static final BigDecimal VACATION_RATE = new BigDecimal("0.075");
 
      @Id
      @GeneratedValue
@@ -76,7 +76,8 @@ public class PayPeriod implements Serializable {
      * @return the amount the employee earns per hour worked
      */
      public BigDecimal getHourlyRate() {
-        return hourlyRate;
+        //return hourlyRate;
+         return hourlyRate.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     public void setHourlyRate(BigDecimal rate) {

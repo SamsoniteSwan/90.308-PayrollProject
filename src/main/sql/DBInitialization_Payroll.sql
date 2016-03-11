@@ -22,15 +22,15 @@ CREATE TABLE payroll.tblWorkLog(
    id INT NOT NULL AUTO_INCREMENT,
    workday DATETIME NOT NULL,
    employee VARCHAR(10) NOT NULL,
-   hours DECIMAL NOT NULL,
-   vacationhrs DECIMAL NOT NULL,
+   hours DECIMAL(4, 2) UNSIGNED NOT NULL,
+   vacationhrs DECIMAL(4, 2) UNSIGNED NOT NULL,
    FOREIGN KEY (employee) REFERENCES tblEmployees(employeeId),
    PRIMARY KEY (id)
 );
 
 CREATE TABLE payroll.tblPayPeriods(
    id INT NOT NULL AUTO_INCREMENT,
-   wage DECIMAL NOT NULL,
+   wage DECIMAL(5, 2) UNSIGNED NOT NULL,
    startDate DATETIME NOT NULL,
    endDate DATETIME NOT NULL,
    employee VARCHAR(10) NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE payroll.tblRecords(
 INSERT INTO payroll.tblEmployees (employeeId, lastName, firstName, dob) VALUES ("0000", "Smith", "Joe", '1999/10/10');
 INSERT INTO payroll.tblEmployees (employeeId, lastName, firstName, dob) VALUES ("1111", "Stevensen", "Steve", '1986/4/18');
 
-INSERT INTO payroll.tblWorkLog (employee, workday, hours, vacationhrs) VALUES ("0000", '2015/10/10', '5.5', '3.0');
+INSERT INTO payroll.tblWorkLog (employee, workday, hours, vacationhrs) VALUES ("0000", '2015/10/10', '5.5', '3.00');
 INSERT INTO payroll.tblWorkLog (employee, workday, hours, vacationhrs) VALUES ("0000", '2015/10/11', '8.0', '0.0');
 INSERT INTO payroll.tblWorkLog (employee, workday, hours, vacationhrs) VALUES ("1111", '2015/10/10', '7.5', '0.0');
 

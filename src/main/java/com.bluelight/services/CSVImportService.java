@@ -13,6 +13,8 @@ import org.joda.time.DateTime;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -103,16 +105,19 @@ public class CSVImportService {
             period.setEmployee(ee);
             period.setStartDay(startstamp);
             period.setEndDay(endstamp);
-            period.setHourlyRate(new BigDecimal(record.getWage()));
+            //period.setHourlyRate(new BigDecimal(record.getWage()));
+            period.setHourlyRate(record.getWage());
             eeService.addPayPeriod(period, ee);
             ee.setPayPeriods(new ArrayList<>());
             ee.getPayPeriods().add(period);
 
 
             // establish Worklog days
-            int dayct = (int)(endstamp.getTime() - startstamp.getTime()) / (1000 * 60 * 60 * 24);
-            float hrsPerDay = record.getHoursWorked()/dayct;
-            float vacaPerDay = record.getVacationUsed()/dayct;
+            int dayct = (int) (1 + (endstamp.getTime() - startstamp.getTime()) / (1000 * 60 * 60 * 24));
+            BigDecimal days = new BigDecimal(dayct).setScale(BigDecimal.ROUND_HALF_UP);
+            //MathContext mc = new MathContext(2, RoundingMode.HALF_UP);
+            BigDecimal hrsPerDay = record.getHoursWorked().divide(days, 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal vacaPerDay = record.getVacationUsed().divide(days, 2, BigDecimal.ROUND_HALF_UP);
 
             DateTime endDay = new DateTime(endstamp);
             DateTime curDay = new DateTime(startstamp);
@@ -123,8 +128,8 @@ public class CSVImportService {
                 WorkDay day = new WorkDay();
                 day.setEmployee(ee);
                 day.setDate(new Timestamp(curDay.getMillis()));
-                day.setHoursWorked(new BigDecimal(hrsPerDay));
-                day.setVacationUsed(new BigDecimal(vacaPerDay));
+                day.setHoursWorked(hrsPerDay);
+                day.setVacationUsed(vacaPerDay);
 
                 eeService.addWorkDay(ee, day);
 

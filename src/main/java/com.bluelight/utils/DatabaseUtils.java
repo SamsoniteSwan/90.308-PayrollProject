@@ -1,6 +1,7 @@
 package com.bluelight.utils;
 
 import com.bluelight.model.Employee;
+import com.bluelight.services.GenericService;
 import com.ibatis.common.jdbc.ScriptRunner;
 import com.bluelight.services.EmployeeService;
 import org.hibernate.SessionFactory;

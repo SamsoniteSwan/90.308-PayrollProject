@@ -140,11 +140,15 @@ public class PayRecord extends PayrollData {
 
     //public String getWage() { return wage; }
 
-    public float getWage() { return Float.parseFloat(wage); }
+    public BigDecimal getWage() { return new BigDecimal(wage); }
+    public BigDecimal getHoursWorked() { return new BigDecimal(hoursWorked); }
+    public BigDecimal getVacationUsed() { return new BigDecimal(vacationUsed); }
 
-    public float getHoursWorked() { return Float.parseFloat(hoursWorked); }
+    //public float getWage() { return Float.parseFloat(wage); }
 
-    public float getVacationUsed() { return Float.parseFloat(vacationUsed); }
+    //public float getHoursWorked() { return Float.parseFloat(hoursWorked); }
+
+    //public float getVacationUsed() { return Float.parseFloat(vacationUsed); }
     @Override
     public int hashCode() {
         int result = id;
