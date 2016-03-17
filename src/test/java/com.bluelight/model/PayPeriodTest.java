@@ -24,8 +24,9 @@ public class PayPeriodTest {
         periodCalendar.set(2015, Calendar.FEBRUARY, 2);
     }
 
-    private static BigDecimal TEST_WAGE = new BigDecimal(10.00);
-    //private static BigDecimal TEST_HOURS = new BigDecimal(40.00);
+    private static BigDecimal TEST_WAGE = new BigDecimal("10.00");
+    private static BigDecimal TEST_HOURS = new BigDecimal("40.00");
+    private static BigDecimal TEST_VACA = new BigDecimal("0.00");
 
     private PayPeriod testPeriod;
 
@@ -33,6 +34,8 @@ public class PayPeriodTest {
         PayPeriod period = new PayPeriod();
         period.setEmployee(EmployeeTest.createEmployee());
         period.setHourlyRate(TEST_WAGE);
+        period.setHoursWorked(TEST_HOURS);
+        period.setVacationUsed(TEST_VACA);
         Timestamp start = new Timestamp(periodCalendar.getTimeInMillis());
         period.setStartDay(start);
         periodCalendar.add(Calendar.DAY_OF_MONTH, 7);
@@ -55,13 +58,15 @@ public class PayPeriodTest {
 
     }
 
+
     @Test
     public void testPayCalculations() {
-        //BigDecimal expectedGrossPay = TEST_WAGE.multiply(TEST_HOURS);
-        //BigDecimal expectedTaxesWithheld = expectedGrossPay.multiply(new BigDecimal(PayPeriod.TAX_RATE));
-        //assertTrue("test the gross pay: testperiod", testPeriod.grossPay().equals(expectedGrossPay));
-        //assertTrue("test the tax rate", testPeriod.taxesWithheld().equals(expectedTaxesWithheld));
-        //assertTrue("test take home pay", testPeriod.takeHomePay().equals(expectedGrossPay.subtract(expectedTaxesWithheld)));
+        BigDecimal expectedGrossPay = TEST_WAGE.multiply(TEST_HOURS);
+        BigDecimal expectedTaxesWithheld = expectedGrossPay.multiply(PayPeriod.TAX_RATE);
+        assertTrue("test the gross pay: testperiod", testPeriod.grossPay().equals(expectedGrossPay));
+        assertTrue("test the tax rate", testPeriod.taxesWithheld().equals(expectedTaxesWithheld));
+        assertTrue("test take home pay", testPeriod.takeHomePay().equals(expectedGrossPay.subtract(expectedTaxesWithheld)));
     }
+
 
 }

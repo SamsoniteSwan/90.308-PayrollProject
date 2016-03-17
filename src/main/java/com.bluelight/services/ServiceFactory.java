@@ -22,4 +22,9 @@ public class ServiceFactory {
      * @return get DatabaseEmployeeService instance
      */
     public static WorkdayService getDBWorkdayServiceInstance() { return new DatabaseEmployeeService(); }
+
+    /**
+     * @return get DatabaseEmployeeService instance
+     */
+    public static PayPeriodService getDBPayPeriodServiceInstance() { return new DatabasePayPeriodService(); }
 }

@@ -1,4 +1,4 @@
-package com.bluelight.Servlets;
+package com.bluelight.servlets;
 
 import com.bluelight.model.Employee;
 import com.bluelight.services.EmployeeService;
@@ -42,8 +42,9 @@ public class PayrollServlet extends HttpServlet {
         ServletContext servletContext = getServletContext();
         // dispatch attribute values to the Results page
         RequestDispatcher dispatcher =
-                servletContext.getRequestDispatcher("/payperiods.jsp");
-        dispatcher.forward(request, response);
+                servletContext.getRequestDispatcher("/employees.jsp");
+        //dispatcher.forward(request, response);
+        dispatcher.include(request, response);
 
     }
 }

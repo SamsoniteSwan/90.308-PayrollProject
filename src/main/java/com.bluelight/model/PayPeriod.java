@@ -39,6 +39,14 @@ public class PayPeriod implements Serializable {
     @Column(name = "wage", nullable = false, insertable = true, updatable = true)
     private BigDecimal hourlyRate;
 
+    @Basic
+    @Column(name = "hoursWorked", nullable = false, insertable = true, updatable = true)
+    private BigDecimal hoursWorked;
+
+    @Basic
+    @Column(name = "hoursVacationUsed", nullable = false, insertable = true, updatable = true)
+    private BigDecimal hoursVacationUsed;
+
     @ManyToOne
     @JoinColumn(name="employee")
     private Employee employee;
@@ -84,6 +92,26 @@ public class PayPeriod implements Serializable {
         hourlyRate = rate;
     }
 
+    public BigDecimal getHoursWorked() {
+        return hoursWorked.setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    public void setHoursWorked(BigDecimal hours) {
+        hoursWorked = hours;
+    }
+
+    public BigDecimal getVacationUsed() {
+        return hoursVacationUsed.setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    public void setVacationUsed(BigDecimal hours) {
+        hoursVacationUsed = hours;
+    }
+
+    public BigDecimal vacationEarned() {
+        return hoursWorked.multiply(
+                VACATION_RATE).setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
     /**
      *
      * @return the PayPeriod start date.
@@ -143,21 +171,22 @@ public class PayPeriod implements Serializable {
      *
      * @return Gross pay (before taxes)... wage * hours
      */
-    //public BigDecimal grossPay() {
-    //    return hourlyRate.multiply(this.hoursWorked());
-    //}
+    public BigDecimal grossPay() {
+        BigDecimal totalHours = this.hoursWorked.add(this.hoursVacationUsed);
+        return hourlyRate.multiply(totalHours);
+    }
 
     /**
      *
      * @return Amount of taxes withheld during the pay period
      */
-    //public BigDecimal taxesWithheld() {
-    //    return grossPay().multiply(new BigDecimal(TAX_RATE));
-    //}
+    public BigDecimal taxesWithheld() {
+        return grossPay().multiply(TAX_RATE);
+    }
 
-    //public BigDecimal takeHomePay() {
-    //    return grossPay().subtract(taxesWithheld());
-    //}
+    public BigDecimal takeHomePay() {
+        return grossPay().subtract(taxesWithheld());
+    }
 
     /**
      * Total hours worked as sum of hours for all the days
@@ -167,15 +196,15 @@ public class PayPeriod implements Serializable {
     public BigDecimal hoursWorked() {
         /* Stream method to test
         days.stream().mapToDouble(day -> day.getHoursWorked().doubleValue()).sum();
-         */
+
 
         //BigDecimal result = new BigDecimal(0);
         /* OLD
         for(WorkDay day : days) {
             result = result.add(day.getHoursWorked());
         }
-        */
-/*
+
+
         return result;
     }*/
 

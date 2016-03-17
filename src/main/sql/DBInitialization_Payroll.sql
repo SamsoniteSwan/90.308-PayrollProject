@@ -1,4 +1,3 @@
-/* TODO - create payroll database */
 /* Clean database tables */
 DROP TABLE IF EXISTS payroll.tblPayPeriods CASCADE;
 DROP TABLE IF EXISTS payroll.tblWorkLog CASCADE;
@@ -31,6 +30,8 @@ CREATE TABLE payroll.tblWorkLog(
 CREATE TABLE payroll.tblPayPeriods(
    id INT NOT NULL AUTO_INCREMENT,
    wage DECIMAL(5, 2) UNSIGNED NOT NULL,
+   hoursWorked DECIMAL(5, 2) UNSIGNED NOT NULL,
+   hoursVacationUsed DECIMAL(5, 2) UNSIGNED NOT NULL,
    startDate DATETIME NOT NULL,
    endDate DATETIME NOT NULL,
    employee VARCHAR(10) NOT NULL,
@@ -54,8 +55,8 @@ INSERT INTO payroll.tblWorkLog (employee, workday, hours, vacationhrs) VALUES ("
 INSERT INTO payroll.tblWorkLog (employee, workday, hours, vacationhrs) VALUES ("0000", '2015/10/11', '8.0', '0.0');
 INSERT INTO payroll.tblWorkLog (employee, workday, hours, vacationhrs) VALUES ("1111", '2015/10/10', '7.5', '0.0');
 
-INSERT INTO payroll.tblPayPeriods (employee, startDate, endDate, wage) VALUES ("0000", '2015/10/10', '2015/10/17', '35.20');
-INSERT INTO payroll.tblPayPeriods (employee, startDate, endDate, wage) VALUES ("0000", '2015/10/18', '2015/10/25', '37.65');
+INSERT INTO payroll.tblPayPeriods (employee, startDate, endDate, wage, hoursWorked, hoursVacationUsed) VALUES ("0000", '2015/10/10', '2015/10/17', '35.20', '40.00', '0.00');
+INSERT INTO payroll.tblPayPeriods (employee, startDate, endDate, wage, hoursWorked, hoursVacationUsed) VALUES ("0000", '2015/10/18', '2015/10/25', '37.65', '35.00', '5.00');
 
 INSERT INTO payroll.tblRecords (employeeId, employeeFN, employeeLN, period) VALUES ('0000', 'Joe', 'Schmoe', '1/15/2015-1/29/2015');
 INSERT INTO payroll.tblRecords (employeeId, employeeFN, employeeLN, period) VALUES ('1111', 'Thelma', 'Louise', '1/30/2015-2/13/2015');

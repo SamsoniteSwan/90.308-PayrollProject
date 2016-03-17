@@ -1,7 +1,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<jsp:useBean id="payperiods" class="java.util.ArrayList" scope="session">
-    <c:set target='${payperiods}'  value='${sessionScope.get("payperiods")}'/>
+<jsp:useBean id="employees" class="java.util.ArrayList" scope="session">
+    <c:set target='${employees}'  value='${sessionScope.get("employees")}'/>
 </jsp:useBean>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -23,15 +23,15 @@
     Filter
 </h2>
 <table style="width:100%">
-    <th>hourly rate</th>
-    <th>start</th>
-    <th>end</th>
-<c:forEach items="${payperiods}" var="payperiod">
+    <th>Employee</th>
+    <th>FirstName</th>
+    <th>LastName</th>
+<c:forEach items="${employees}" var="employee">
     <tr>
 
-        <td><c:out value="${payperiod.getHourlyRate()}"/></td>
-        <td><c:out value="${payperiod.getStartDay()}"/></td>
-        <td><c:out value="${employee.getEndDay()}"/></td>
+        <td><c:out value="${employee.getEmployeeId()}"/></td>
+        <td><c:out value="${employee.getFirstName()}"/></td>
+        <td><c:out value="${employee.getLastName()}"/></td>
 
     </tr>
 </c:forEach>

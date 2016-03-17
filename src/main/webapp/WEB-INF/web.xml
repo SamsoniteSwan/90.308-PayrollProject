@@ -7,7 +7,7 @@
 
   <servlet>
     <servlet-name>PayrollServlet</servlet-name>
-    <servlet-class>com.bluelight.Servlets.PayrollServlet</servlet-class>
+    <servlet-class>com.bluelight.servlets.PayrollServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
