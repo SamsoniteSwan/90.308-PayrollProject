@@ -106,6 +106,7 @@ public class DatabaseEmployeeService implements EmployeeService, WorkdayService 
             employee.setPayPeriods(new ArrayList<>());
             employee.getPayPeriods().add(payPeriod);
             session.saveOrUpdate(payPeriod);
+            //session.saveOrUpdate(employee);
             transaction.commit();
 
         } catch (HibernateException e) {
@@ -331,12 +332,14 @@ public class DatabaseEmployeeService implements EmployeeService, WorkdayService 
 
     public BigDecimal getTotalPay(Employee employee, DateTime from, DateTime until) throws ServiceException {
         BigDecimal result = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
-        int resulti = 0;
+
         List<PayPeriod> periods = getPayPeriods(employee);
-        List<WorkDay> days = getAllWorkdays(employee);
+        //List<WorkDay> days = getAllWorkdays(employee);
         // loop through pay periods
         for (PayPeriod period : periods) {
 
+            result = result.add(period.grossPay());
+            /*
             for (WorkDay day : days) {
                 if (period.hasDay(day)) {
 
@@ -346,11 +349,11 @@ public class DatabaseEmployeeService implements EmployeeService, WorkdayService 
                     result = result.add(tmp);
                 }
             }
+            */
         }
         // round decimal value to whole cents
         result = result.setScale(2, BigDecimal.ROUND_HALF_UP);
 
-        //return String.format("%.2g%n", resulti);
         return  result;
     }
 

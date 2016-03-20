@@ -77,7 +77,6 @@ public class CSVImportService {
      * @param source string path to csv file.
      */
     public void uploadCsvToDb(String source) throws FileNotFoundException, ServiceException {
-
         DatabaseEmployeeService eeService = new DatabaseEmployeeService();
         List<PayRecord> records = loadCsvPeriods(source);
 
@@ -105,41 +104,15 @@ public class CSVImportService {
             period.setEmployee(ee);
             period.setStartDay(startstamp);
             period.setEndDay(endstamp);
-            //period.setHourlyRate(new BigDecimal(record.getWage()));
             period.setHourlyRate(record.getWage());
+            period.setHoursWorked(record.getHoursWorked());
+            period.setVacationUsed(record.getVacationUsed());
             eeService.addPayPeriod(period, ee);
             ee.setPayPeriods(new ArrayList<>());
             ee.getPayPeriods().add(period);
 
-
-            // establish Worklog days
-            int dayct = (int) (1 + (endstamp.getTime() - startstamp.getTime()) / (1000 * 60 * 60 * 24));
-            BigDecimal days = new BigDecimal(dayct).setScale(BigDecimal.ROUND_HALF_UP);
-            //MathContext mc = new MathContext(2, RoundingMode.HALF_UP);
-            BigDecimal hrsPerDay = record.getHoursWorked().divide(days, 2, BigDecimal.ROUND_HALF_UP);
-            BigDecimal vacaPerDay = record.getVacationUsed().divide(days, 2, BigDecimal.ROUND_HALF_UP);
-
-            DateTime endDay = new DateTime(endstamp);
-            DateTime curDay = new DateTime(startstamp);
-
-            ee.setWorkDays(new ArrayList<>());
-
-            while (endDay.isAfter(curDay) || endDay.isEqual(curDay)) {
-                WorkDay day = new WorkDay();
-                day.setEmployee(ee);
-                day.setDate(new Timestamp(curDay.getMillis()));
-                day.setHoursWorked(hrsPerDay);
-                day.setVacationUsed(vacaPerDay);
-
-                eeService.addWorkDay(ee, day);
-
-                ee.getWorkDays().add(day);
-                curDay = curDay.plusDays(1);
-            }
-
             eeService.addOrUpdateEmployee(ee);
         }
-
     }
 
 }

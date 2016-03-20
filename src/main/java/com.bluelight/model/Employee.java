@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Employee
+ * Employee object for storing in database
  *
  * @author Jeremy Swanson (jeremy at jlswanson.com)
  * @version 1, 2/5/2016

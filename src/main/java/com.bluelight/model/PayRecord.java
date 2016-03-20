@@ -15,7 +15,8 @@ import java.util.logging.Logger;
 
 /**
  * PayRecord
- * Object for each row of the csv
+ * Object for each row of the csv.  Gets converted to PayPeriod object
+ * for storing in the database.
  *
  * @author Jeremy Swanson (jeremy at jlswanson.com)
  * @version 1, 2/7/2016
@@ -77,11 +78,6 @@ public class PayRecord extends PayrollData {
         ee.setBirthDate(new Timestamp(Employee.DEFAULT_BIRTHDAY.getTimeInMillis()));
         ee.setStatus(Employee.DEFAULT_STATUS);
         this.setEmployee(ee);
-        //employee.setEmployeeId(employeeId);
-        //employee.setFirstName(employeeFirst);
-        //employee.setLastName(employeeLast);
-        //employee.setBirthDate(new Timestamp(Employee.DEFAULT_BIRTHDAY.getTimeInMillis()));
-        //employee.setStatus("active");
 
         return ee;
     }

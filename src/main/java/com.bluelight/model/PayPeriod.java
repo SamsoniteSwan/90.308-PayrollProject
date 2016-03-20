@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * PayPeriod
+ * Database stored object for a length of time an employee worked
  *
  * @author Jeremy Swanson (jeremy at jlswanson.com)
  * @version 1, 2/5/2016
@@ -207,6 +208,39 @@ public class PayPeriod implements Serializable {
 
         return result;
     }*/
+
+    public List<WorkDay> getWorkDays() {
+
+        List<WorkDay> result = new ArrayList<>();
+
+        int dayct = (int) (1 + (endDay.getTime() - startDay.getTime()) / (1000 * 60 * 60 * 24));
+        BigDecimal days = new BigDecimal(dayct).setScale(BigDecimal.ROUND_HALF_UP);
+
+        BigDecimal hrsPerDay = this.getHoursWorked().divide(days, 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal vacaPerDay = this.getVacationUsed().divide(days, 2, BigDecimal.ROUND_HALF_UP);
+
+        DateTime endDay = new DateTime(this.getEndDay());
+        DateTime curDay = new DateTime(this.getStartDay());
+
+
+        while (endDay.isAfter(curDay) || endDay.isEqual(curDay)) {
+            WorkDay day = new WorkDay();
+            day.setEmployee(employee);
+            day.setDate(new Timestamp(curDay.getMillis()));
+            day.setHoursWorked(hrsPerDay);
+            day.setVacationUsed(vacaPerDay);
+
+
+            // v might not be needed v
+            employee.getWorkDays().add(day);
+
+            result.add(day);
+
+            curDay = curDay.plusDays(1);
+        }
+
+        return result;
+    }
 
     @Override
     public int hashCode() {
