@@ -27,4 +27,6 @@ public class ServiceFactory {
      * @return get DatabaseEmployeeService instance
      */
     public static PayPeriodService getDBPayPeriodServiceInstance() { return new DatabasePayPeriodService(); }
+
+    public static CSVImportService getCsvImportServiceInstance() { return new CSVImportService(); }
 }

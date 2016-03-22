@@ -3,8 +3,10 @@ package com.bluelight.model;
 import com.bluelight.services.EmployeeService;
 import com.bluelight.services.ServiceException;
 import com.bluelight.services.ServiceFactory;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
@@ -54,7 +56,8 @@ public class Employee {
         //empty constructor required by Hibernate
     }
 
-    public Employee(String id) {
+    /* UNKNOWN USE
+    public Employee(String id){
         this.employeeId = id;
         try {
             EmployeeService service = ServiceFactory.getDBEmployeeServiceInstance();
@@ -72,6 +75,7 @@ public class Employee {
             //TODO - add exception handling here
         }
     }
+    */
 
     /**
      * Primary Key - Unique ID for a particular row in the person table.
@@ -156,6 +160,19 @@ public class Employee {
     public List<WorkDay> getWorkDays() { return workDays; }
 
     public void setWorkDays(List<WorkDay> days) {this.workDays = days; }
+
+    public BigDecimal getVacationBalance() {
+
+        BigDecimal earned = new BigDecimal("0");
+        BigDecimal used = new BigDecimal("0");
+
+        for (PayPeriod pp : getPayPeriods()) {
+            earned = earned.add(pp.vacationEarned());
+            used = used.add(pp.getVacationUsed());
+        }
+
+        return earned.subtract(used);
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -49,12 +49,14 @@ public class WorkDay {
         hoursWorked = hours;
     }
 
+    /*
     public WorkDay(String eeId, Timestamp day, BigDecimal hrsWorked, BigDecimal hrsVaca) {
         this.employee = new Employee(eeId);
         this.day = day;
         this.hoursWorked = hrsWorked;
         this.vacationUsed = hrsVaca;
     }
+    */
     /**
      * Primary Key - Unique ID for a particular row in the tbl_Favorites table.
      *

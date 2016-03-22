@@ -25,6 +25,10 @@ public interface EmployeeService {
      */
     List<Employee> getEmployees() throws ServiceException;
 
+    List<Employee> getEmployeesByLast(String employeeLast) throws ServiceException;
+
+    Employee getEmployeeById(String employeeId) throws ServiceException;
+
     /**
      * Add a new employee or update an existing employee's data
      *

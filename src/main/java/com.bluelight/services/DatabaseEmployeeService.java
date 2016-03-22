@@ -106,7 +106,6 @@ public class DatabaseEmployeeService implements EmployeeService, WorkdayService 
             employee.setPayPeriods(new ArrayList<>());
             employee.getPayPeriods().add(payPeriod);
             session.saveOrUpdate(payPeriod);
-            //session.saveOrUpdate(employee);
             transaction.commit();
 
         } catch (HibernateException e) {
@@ -209,7 +208,7 @@ public class DatabaseEmployeeService implements EmployeeService, WorkdayService 
         session.close();
     }
 
-    public Employee getEmployee(String eeID) {
+    public Employee getEmployeeById(String eeID) throws ServiceException {
         Session session =  DatabaseUtils.getSessionFactory().openSession();
         Employee employee = (Employee) session.get(Employee.class, eeID);
         // Could return null.
@@ -219,6 +218,25 @@ public class DatabaseEmployeeService implements EmployeeService, WorkdayService 
         }
         session.close();
         return employee;
+    }
+
+    /**
+     * gets a list of all employees with the last name.
+     *
+     * @param lastName Last name of employee(s) to search
+     * @return List of employees
+     * @throws ServiceException
+     */
+    public List<Employee> getEmployeesByLast(String lastName) throws ServiceException {
+        List<Employee> result = new ArrayList<>();
+        List<Employee> all = this.getEmployees();
+        for (Employee ee : all) {
+            if (ee.getLastName().compareTo(lastName)==0) {
+                result.add(ee);
+            }
+        }
+        return result;
+
     }
 
     public ArrayList<WorkDay> getWorkDays(String employeeId, DateTime from, DateTime until) throws ServiceException {

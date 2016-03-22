@@ -19,19 +19,28 @@
     </style>
 </head>
 <body>
+<%@include file="navigator.jsp" %>
 <h2>
     Filter
 </h2>
 <table style="width:100%">
-    <th>hourly rate</th>
     <th>start</th>
     <th>end</th>
+    <th>hourly rate</th>
+    <th>gross Pay</th>
+    <th>Taxes Withheld</th>
+    <th>Take Home Pay</th>
+
 <c:forEach items="${payperiods}" var="payperiod">
     <tr>
-
-        <td><c:out value="${payperiod.getHourlyRate()}"/></td>
         <td><c:out value="${payperiod.getStartDay()}"/></td>
-        <td><c:out value="${employee.getEndDay()}"/></td>
+        <td><c:out value="${payperiod.getEndDay()}"/></td>
+        <td><c:out value="${payperiod.getHourlyRate()}"/></td>
+        <td><c:out value="${payperiod.grossPay()}"/></td>
+        <td><c:out value="${payperiod.taxesWithheld()}"/></td>
+        <td><c:out value="${payperiod.takeHomePay()}"/></td>
+
+
 
     </tr>
 </c:forEach>

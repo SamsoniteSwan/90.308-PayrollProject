@@ -174,7 +174,7 @@ public class PayPeriod implements Serializable {
      */
     public BigDecimal grossPay() {
         BigDecimal totalHours = this.hoursWorked.add(this.hoursVacationUsed);
-        return hourlyRate.multiply(totalHours);
+        return hourlyRate.multiply(totalHours).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     /**
@@ -182,11 +182,11 @@ public class PayPeriod implements Serializable {
      * @return Amount of taxes withheld during the pay period
      */
     public BigDecimal taxesWithheld() {
-        return grossPay().multiply(TAX_RATE);
+        return grossPay().multiply(TAX_RATE).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     public BigDecimal takeHomePay() {
-        return grossPay().subtract(taxesWithheld());
+        return grossPay().subtract(taxesWithheld().setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
     /**

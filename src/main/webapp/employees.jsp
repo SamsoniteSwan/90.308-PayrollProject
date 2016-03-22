@@ -19,20 +19,23 @@
     </style>
 </head>
 <body>
+<%@include file="navigator.jsp" %>
 <h2>
     Filter
 </h2>
 <table style="width:100%">
-    <th>Employee</th>
-    <th>FirstName</th>
-    <th>LastName</th>
+    <th>Employee ID</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Vacation Balance</th>
+
 <c:forEach items="${employees}" var="employee">
     <tr>
 
         <td><c:out value="${employee.getEmployeeId()}"/></td>
         <td><c:out value="${employee.getFirstName()}"/></td>
         <td><c:out value="${employee.getLastName()}"/></td>
-
+        <td><c:out value="${employee.getVacationBalance()}"/></td>
     </tr>
 </c:forEach>
 </table>
