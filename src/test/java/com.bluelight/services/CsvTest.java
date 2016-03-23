@@ -1,6 +1,7 @@
 package com.bluelight.services;
 
 import com.bluelight.model.*;
+import com.bluelight.utils.DatabaseUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,8 +27,9 @@ public class CsvTest {
     CSVImportService service;
 
     @Before
-    public void setup() {
+    public void setup() throws Exception {
         service = new CSVImportService();
+        DatabaseUtils.initializeDatabase(DatabaseUtils.initializationFile);
     }
 
     @Test
