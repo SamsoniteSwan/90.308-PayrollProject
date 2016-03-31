@@ -18,12 +18,9 @@
         <property name="hibernate.connection.password">some_pass</property>
 
 
-
         <mapping class="com.bluelight.model.Employee"/>
         <mapping class="com.bluelight.model.PayPeriod"/>
         <mapping class="com.bluelight.model.PayRecord"/>
-        <mapping class="com.bluelight.model.WorkDay"/>
-
 
 
     </session-factory>

@@ -2,16 +2,9 @@ package com.bluelight.apps;
 
 import com.bluelight.model.*;
 import com.bluelight.services.*;
-import com.bluelight.utils.DatabaseUtils;
-import com.bluelight.utils.DateTimeParser;
-import com.bluelight.utils.Interval;
-import org.joda.time.DateTime;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * BasicPayrollApplication
@@ -98,13 +91,13 @@ public class BasicPayrollApplication {
      * @throws ServiceException If data about the stock can't be retrieved. This is a
      *                               fatal error.
      */
-    public String displayDayRecords(PayrollQuery payrollQuery) throws ServiceException {
+    public String displayPeriodRecords(PayrollQuery payrollQuery) throws ServiceException {
         StringBuilder stringBuilder = new StringBuilder();
 
-        List<WorkDay> days = employeeService.getWorkdays(payrollQuery.getEmployeeId(), payrollQuery.getFrom(), payrollQuery.getUntil());
+        List<PayPeriod> periods = employeeService.getPayPeriods(payrollQuery.getEmployeeId(), payrollQuery.getFrom(), payrollQuery.getUntil());
         stringBuilder.append("Pay Periods for: " + payrollQuery.getEmployeeId() + "\n");
-        for (WorkDay day : days) {
-            stringBuilder.append(day.toString());
+        for (PayPeriod pp : periods) {
+            stringBuilder.append(pp.toString());
         }
 
         return stringBuilder.toString();
@@ -126,7 +119,7 @@ public class BasicPayrollApplication {
             BasicPayrollApplication basicPayrollApplication =
                     new BasicPayrollApplication(employeeService);
 
-            basicPayrollApplication.displayDayRecords(payrollQuery);
+            basicPayrollApplication.displayPeriodRecords(payrollQuery);
 
         } catch (ParseException e) {
             exitStatus = ProgramTerminationStatusEnum.ABNORMAL;

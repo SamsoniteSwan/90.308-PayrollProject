@@ -18,4 +18,10 @@ public class ServiceFactoryTest {
         assertNotNull(payrollService);
     }
 
+    @Test
+    public void testGetCSVServiceInstance() {
+        CSVImportService CsvService = ServiceFactory.getCsvImportServiceInstance();
+        assertNotNull(CsvService);
+    }
+
 }

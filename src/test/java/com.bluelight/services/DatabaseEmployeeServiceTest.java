@@ -69,31 +69,17 @@ public class DatabaseEmployeeServiceTest {
         employeeService.addPayPeriod(PayPeriodTest.samplePeriod(), testEmployee);
         List<PayPeriod> list = employeeService.getPayPeriods(testEmployee);
         assertTrue("testEmployee has 1 pay period", list.size() == 1);
-
     }
 
     @Test
-    public void addOrUpdateWorkdayTest() throws ServiceException {
-
-
+    public void getEmployeesByLastTest() throws ServiceException {
         employeeService.addOrUpdateEmployee(testEmployee);
-        List<WorkDay> startList = employeeService.getWorkdays(testEmployee.getEmployeeId(),
-                min,
-                max);
-        employeeService.addOrUpdateWorkday(WorkDayTest.createStandardWorkDay(), testEmployee);
-        List<WorkDay> endList = employeeService.getAllWorkdays(testEmployee);
+        List<Employee> employees = employeeService.getEmployeesByLast(
+                testEmployee.getLastName());
 
-
-        assertTrue("startct=" + startList.size() + "; endct=" + endList.size(), startList.size() < endList.size());
+        assertTrue("only 1 employee with last name=" + testEmployee.getLastName(),
+                employees.size() == 1);
 
     }
 
-    /*
-    @Test
-    public void testGetAll() {
-        List<Employee> eelist = employeeService.getAll();
-        assertTrue("list size=" + eelist.size(), eelist.size() == 2);
-
-    }
-    */
 }

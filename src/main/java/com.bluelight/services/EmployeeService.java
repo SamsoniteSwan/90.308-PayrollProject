@@ -2,7 +2,6 @@ package com.bluelight.services;
 
 import com.bluelight.model.Employee;
 import com.bluelight.model.PayPeriod;
-import com.bluelight.model.WorkDay;
 import org.joda.time.DateTime;
 
 import java.util.List;
@@ -25,8 +24,24 @@ public interface EmployeeService {
      */
     List<Employee> getEmployees() throws ServiceException;
 
+    /**
+     * Get all employees with a given Last Name.
+     *
+     * @param employeeLast string last name value
+     * @return a list of Employees
+     * @throws ServiceException if a service can not read or write the requested data
+     *                                    or otherwise perform the requested operation.
+     */
     List<Employee> getEmployeesByLast(String employeeLast) throws ServiceException;
 
+    /**
+     * Get the employee with the given ID.
+     *
+     * @param employeeId string of distict ID.
+     * @return single employee instance
+     * @throws ServiceException if a service can not read or write the requested data
+     *                                    or otherwise perform the requested operation.
+     */
     Employee getEmployeeById(String employeeId) throws ServiceException;
 
     /**
@@ -48,6 +63,15 @@ public interface EmployeeService {
     List<PayPeriod> getPayPeriods(Employee employee) throws ServiceException;
 
     /**
+     * Get a list of all a person's pay period records.
+     *
+     * @return a list of pay periods
+     * @throws ServiceException if a service can not read or write the requested data
+     *                                    or otherwise perform the requested operation.
+     */
+    List<PayPeriod> getPayPeriods(String employeeId, DateTime from, DateTime until) throws ServiceException;
+
+    /**
      * Assign a pay period to an employee.
      *
      * @param payPeriod  The payperiod to assign
@@ -56,29 +80,5 @@ public interface EmployeeService {
      *                                    or otherwise perform the requested operation.
      */
     void addPayPeriod(PayPeriod payPeriod, Employee employee) throws ServiceException;
-
-    List<WorkDay> getWorkdays(String employeeId, DateTime from, DateTime until) throws ServiceException;
-
-    void addWorkDay(Employee employee, WorkDay day) throws ServiceException;
-
-    List<WorkDay> getAllWorkdays(Employee employee) throws ServiceException;
-
-    /**
-     * Get a list of all WorkDay records.
-     *
-     * @return a list of WorkDay instances.
-     * @throws ServiceException if a service can not read or write the requested data
-     *                                    or otherwise perform the requested operation.
-     */
-    List<WorkDay> getWorkday() throws ServiceException;
-
-    /**
-     * Add a WorkDay or change an existing one.
-     *
-     * @param date a WorkDay object to either update or create
-     * @throws ServiceException if a service can not read or write the requested data
-     *                                    or otherwise perform the requested operation.
-     */
-    void addOrUpdateWorkday(WorkDay date, Employee ee) throws ServiceException;
 
 }

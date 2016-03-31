@@ -25,14 +25,5 @@
     <url-pattern>/servlets/PayPeriodServlet/*</url-pattern>
   </servlet-mapping>
 
-  <servlet>
-    <servlet-name>CsvImportServlet</servlet-name>
-    <servlet-class>com.bluelight.servlets.CsvImportServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>CsvImportServlet</servlet-name>
-    <url-pattern>/servlets/CsvImportServlet/*</url-pattern>
-  </servlet-mapping>
 
 </web-app>

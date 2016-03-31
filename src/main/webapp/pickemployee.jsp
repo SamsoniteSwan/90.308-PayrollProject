@@ -29,8 +29,15 @@ td.center { text-align: center; }
     <form name="employeesearchform" action="servlets/PayPeriodServlet/" method="post">
      <table>
       <tr>
+       <td>Employee ID</td>
+       <td><input type="text" name="employeeId" title="employeeId" /></td>
+      </tr>
+      <tr>
+       <td> OR... </td>
+      </tr>
+      <tr>
        <td>Last Name</td>
-       <td><input type="text" name="employeeLastName" title="employeeLastName"</td>
+       <td><input type="text" name="employeeLastName" title="employeeLastName" /></td>
       </tr>
       <tr><td colspan="2"><input type="SUBMIT" value="Get Values"></td></tr>
      </table>

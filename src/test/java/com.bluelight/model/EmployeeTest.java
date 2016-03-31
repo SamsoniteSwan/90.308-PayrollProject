@@ -5,12 +5,14 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.validation.constraints.AssertTrue;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * EmployeeTest
@@ -68,6 +70,8 @@ public class EmployeeTest {
     public void testCollectionGettersAndSetters() {
         // Add a number of mock PayPeriods
         PayPeriod mockPeriod = Mockito.mock(PayPeriod.class);
+        when(mockPeriod.getVacationUsed()).thenReturn(new BigDecimal("2.00"));
+        when(mockPeriod.vacationEarned()).thenReturn(new BigDecimal("3.00"));
         ArrayList<PayPeriod> mockPeriodList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             mockPeriodList.add(mockPeriod);
@@ -75,6 +79,8 @@ public class EmployeeTest {
         testEmployee.setPayPeriods(mockPeriodList);
         assertTrue("employee has " + mockPeriodList.size(),
                 testEmployee.getPayPeriods().size() == 5);
+        assertTrue("vacation balance equals" + testEmployee.getVacationBalance(),
+                testEmployee.getVacationBalance().compareTo(new BigDecimal("5.00"))==0);
     }
 
     @Test

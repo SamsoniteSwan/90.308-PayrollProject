@@ -3,22 +3,14 @@ package com.bluelight.services;
 import com.bluelight.model.Employee;
 import com.bluelight.model.PayPeriod;
 import com.bluelight.model.PayRecord;
-import com.bluelight.model.WorkDay;
 import com.bluelight.utils.DatabaseUtils;
 import com.bluelight.utils.DateTimeParser;
-import com.opencsv.CSVParser;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.*;
-import org.joda.time.DateTime;
 
-import javax.servlet.http.Part;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -118,27 +110,5 @@ public class CSVImportService {
             eeService.addOrUpdateEmployee(ee);
         }
     }
-
-    /*
-    public List<PayRecord> loadCsvPeriodsfromString(String filetext) throws FileNotFoundException, IOException {
-
-
-        FileReader fr = new FileReader(filetext);
-
-        HeaderColumnNameTranslateMappingStrategy<PayRecord> strat = new HeaderColumnNameTranslateMappingStrategy<>();
-        strat.setType(PayRecord.class);
-        strat.setColumnMapping(columnMap());
-        CsvToBean<PayRecord> csvToBean = new CsvToBean<>();
-        List<PayRecord> recordList;
-
-            recordList = csvToBean.parse(strat);
-
-
-        for (PayRecord rec : recordList) {
-            rec.setEmployee(rec.getEmployee());
-        }
-        return recordList;
-    }
-    */
 
 }

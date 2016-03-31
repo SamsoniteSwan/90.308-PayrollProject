@@ -5,11 +5,9 @@ import com.opencsv.bean.CsvBind;
 import org.joda.time.DateTime;
 import com.bluelight.utils.DateTimeParser;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -48,9 +46,7 @@ public class PayRecord extends PayrollData {
 
     @CsvBind
     private String vacationUsed;
-/*
-    @ManyToOne
-    @JoinColumn(name="employeeId")*/
+
     private Employee employee;
 
     public PayRecord() {
@@ -82,8 +78,6 @@ public class PayRecord extends PayrollData {
         return ee;
     }
 
-    //public Employee getEmployee() { return employee; }
-
     /**
      * Specify the Employee associated with the record.
      *
@@ -100,14 +94,6 @@ public class PayRecord extends PayrollData {
      * @param //period   String consisting of start and end date
      *                 (will later need to be parsed)
      */
-
-    public PayRecord(String employeeId, String period)  {
-        super();
-        this.employee = new Employee();
-        this.employee.setEmployeeId(employeeId);
-        this.employeeId = employeeId;
-        this.period = period;
-    }
 
 
     public DateTime startDate() {
@@ -134,17 +120,10 @@ public class PayRecord extends PayrollData {
 
     public String getEmployeeLast() { return employeeLast; }
 
-    //public String getWage() { return wage; }
-
     public BigDecimal getWage() { return new BigDecimal(wage); }
     public BigDecimal getHoursWorked() { return new BigDecimal(hoursWorked); }
     public BigDecimal getVacationUsed() { return new BigDecimal(vacationUsed); }
 
-    //public float getWage() { return Float.parseFloat(wage); }
-
-    //public float getHoursWorked() { return Float.parseFloat(hoursWorked); }
-
-    //public float getVacationUsed() { return Float.parseFloat(vacationUsed); }
     @Override
     public int hashCode() {
         int result = id;

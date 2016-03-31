@@ -25,22 +25,34 @@ import java.util.List;
  */
 public class PayPeriodServlet extends HttpServlet {
 
-    protected static final String LASTNAME_PARAMETER_KEY = "employeeLastName";
+    protected static final String PARAMETER_KEY_EMPLOYEEID = "employeeId";
+    protected static final String PARAMETER_KEY_LASTNAME = "employeeLastName";
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
 
-        String lastName = request.getParameter(LASTNAME_PARAMETER_KEY);
+        String lastName = request.getParameter(PARAMETER_KEY_LASTNAME);
+        String eeId = request.getParameter(PARAMETER_KEY_EMPLOYEEID);
 
         HttpSession session = request.getSession();
 
         EmployeeService service = ServiceFactory.getDBEmployeeServiceInstance();
         List<PayPeriod> payPeriods = new ArrayList<>();
         try {
-            List <Employee> employees = service.getEmployeesByLast(lastName);
-            for (Employee ee : employees) {
+            /*
+             * if id is entered, use id to return payperiods for a distinct employee.
+             *   Otherwise, use last name to return payperiods for all employees with
+             *   the specified last name.
+             */
+            if (eeId != null && !eeId.isEmpty()) {
+                Employee ee = service.getEmployeeById(eeId);
                 payPeriods.addAll(service.getPayPeriods(ee));
+            } else {
+                List<Employee> employees = service.getEmployeesByLast(lastName);
+                for (Employee ee : employees) {
+                    payPeriods.addAll(service.getPayPeriods(ee));
+                }
             }
         } catch (ServiceException e) {
             e.printStackTrace();
@@ -52,8 +64,8 @@ public class PayPeriodServlet extends HttpServlet {
         // dispatch attribute values to the Results page
         RequestDispatcher dispatcher =
                 servletContext.getRequestDispatcher("/payperiods.jsp");
-        //dispatcher.forward(request, response);
-        dispatcher.include(request, response);
+        dispatcher.forward(request, response);
+        //dispatcher.include(request, response);
 
     }
 }

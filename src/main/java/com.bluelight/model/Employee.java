@@ -46,8 +46,6 @@ public class Employee {
     @Column(name = "status", nullable = false, insertable = true, updatable = true, length = 20)
     private String status;
 
-    @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<WorkDay> workDays;
 
     @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PayPeriod> payPeriods;
@@ -56,26 +54,6 @@ public class Employee {
         //empty constructor required by Hibernate
     }
 
-    /* UNKNOWN USE
-    public Employee(String id){
-        this.employeeId = id;
-        try {
-            EmployeeService service = ServiceFactory.getDBEmployeeServiceInstance();
-            List<Employee> list = service.getEmployees();
-            for (Employee ee : list) {
-                if (ee.getEmployeeId().compareTo(id) == 0) {
-                    this.firstName = ee.getFirstName();
-                    this.lastName = ee.getLastName();
-                    this.birthDate = ee.getBirthDate();
-                    this.status = ee.getStatus();
-                    break;
-                }
-            }
-        } catch (ServiceException e) {
-            //TODO - add exception handling here
-        }
-    }
-    */
 
     /**
      * Primary Key - Unique ID for a particular row in the person table.
@@ -157,14 +135,13 @@ public class Employee {
 
     public void setPayPeriods(List<PayPeriod> periods) {this.payPeriods = periods; }
 
-    public List<WorkDay> getWorkDays() { return workDays; }
-
-    public void setWorkDays(List<WorkDay> days) {this.workDays = days; }
 
     public BigDecimal getVacationBalance() {
 
         BigDecimal earned = new BigDecimal("0");
         BigDecimal used = new BigDecimal("0");
+
+
 
         for (PayPeriod pp : getPayPeriods()) {
             earned = earned.add(pp.vacationEarned());

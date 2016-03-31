@@ -63,7 +63,6 @@ public class CsvTest {
         DatabaseEmployeeService dbService = new DatabaseEmployeeService();
         List<Employee> ees;
         List<PayPeriod> payPeriods;
-        //List<WorkDay> workDays = null;
         BigDecimal pay;
 
 
@@ -74,18 +73,13 @@ public class CsvTest {
         payPeriods = dbService.getPayPeriods(sampleEmployee);
         assertTrue("payPeriods added for " + sampleEmployee.toString() + "; count=" + payPeriods.size(), payPeriods.size() == 4);
 
-        /*
-        workDays = dbService.getAllWorkdays(sampleEmployee);
-        assertTrue("total workdays for " + sampleEmployee.toString() + ": " + workDays.size(),
-                workDays.size() == 59);
-        */
+
         pay = dbService.getTotalPay(sampleEmployee,
                 DatabaseEmployeeServiceTest.min,
                 DatabaseEmployeeServiceTest.max);
 
 
         // 3 different employees are listed in the csv file, so 2 + 3 = 5
-
 
         assertTrue("pay for " + sampleEmployee + "; totalPay=" + pay, pay.compareTo(new BigDecimal("6303.44"))==0);
 

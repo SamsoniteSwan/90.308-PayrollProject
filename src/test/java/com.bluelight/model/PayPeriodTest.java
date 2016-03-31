@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -47,14 +48,14 @@ public class PayPeriodTest {
     @Before
     public void setup() {
         testPeriod = samplePeriod();
-        //testPeriod.setHoursWorked(TEST_HOURS);
     }
 
     @Test
     public void testInstatiation() {
         assertTrue(testPeriod.getHourlyRate().compareTo(TEST_WAGE)== 0);
         assertTrue(testPeriod.getStartDay() != testPeriod.getEndDay());
-        //assertEquals(testPeriod.getHoursWorked(), TEST_HOURS);
+        assertEquals(testPeriod.getHoursWorked(), TEST_HOURS);
+        assertNotNull(testPeriod.vacationEarned());
 
     }
 
@@ -68,5 +69,9 @@ public class PayPeriodTest {
         assertTrue("test take home pay", testPeriod.takeHomePay().equals(expectedGrossPay.subtract(expectedTaxesWithheld)));
     }
 
+    @Test
+    public void testHashCode() {
+        assertTrue("testPeriod has hash value", testPeriod.hashCode() != 0);
+    }
 
 }
