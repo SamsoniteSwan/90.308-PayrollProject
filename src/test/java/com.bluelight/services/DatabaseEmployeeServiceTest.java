@@ -73,6 +73,7 @@ public class DatabaseEmployeeServiceTest {
 
     @Test
     public void getEmployeesByLastTest() throws ServiceException {
+
         employeeService.addOrUpdateEmployee(testEmployee);
         List<Employee> employees = employeeService.getEmployeesByLast(
                 testEmployee.getLastName());
@@ -80,6 +81,21 @@ public class DatabaseEmployeeServiceTest {
         assertTrue("only 1 employee with last name=" + testEmployee.getLastName(),
                 employees.size() == 1);
 
+    }
+
+    @Test
+    public void getEmployeesWithPayperiodsTest() throws ServiceException {
+
+        employeeService.addOrUpdateEmployee(testEmployee);
+        employeeService.addPayPeriod(PayPeriodTest.samplePeriod(), testEmployee);
+        List<Employee> employees = employeeService.getEmployeesWithPayperiods();
+        int ct = 0;
+        for (Employee ee : employees) {
+            ct += ee.getPayPeriods().size();
+        }
+        assertTrue("there are " + employees.size() +
+                " employees with " + ct + " payperiods.",
+                ct > 0);
     }
 
 }

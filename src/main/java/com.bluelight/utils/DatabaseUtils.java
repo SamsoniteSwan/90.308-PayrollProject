@@ -28,26 +28,6 @@ public class DatabaseUtils {
     public static final String initializationFile = "./src/main/sql/DBInitialization_Payroll.sql" ;
     public static Connection connection;
 
-    /**
-     * Execute SQL code
-     * @param someSQL  the code to execute
-     * @return true if the operation succeeded.
-     * @throws DatabaseException if accessing and executing the sql failed in an unexpected way.
-     *
-     */
-    public static boolean executeSQL(String someSQL) throws DatabaseException {
-        Connection connection = null;
-        boolean returnValue = false;
-        try {
-            connection = DatabaseUtils.getConnection();
-            Statement statement = connection.createStatement();
-            returnValue = statement.execute(someSQL);
-        } catch (DatabaseConnectionException | SQLException e) {
-            throw new DatabaseException(e.getMessage(), e);
-        }
-        return returnValue;
-    }
-
     private static SessionFactory sessionFactory;
     private static Configuration configuration;
     /*
@@ -137,6 +117,26 @@ public class DatabaseUtils {
                     + e.getMessage(), e);
         }
 
+    }
+
+    /**
+     * Execute SQL code
+     * @param someSQL  the code to execute
+     * @return true if the operation succeeded.
+     * @throws DatabaseException if accessing and executing the sql failed in an unexpected way.
+     *
+     */
+    public static boolean executeSQL(String someSQL) throws DatabaseException {
+        Connection connection = null;
+        boolean returnValue = false;
+        try {
+            connection = DatabaseUtils.getConnection();
+            Statement statement = connection.createStatement();
+            returnValue = statement.execute(someSQL);
+        } catch (DatabaseConnectionException | SQLException e) {
+            throw new DatabaseException(e.getMessage(), e);
+        }
+        return returnValue;
     }
 
     /**

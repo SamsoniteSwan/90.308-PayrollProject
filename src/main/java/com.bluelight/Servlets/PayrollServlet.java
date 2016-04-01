@@ -32,7 +32,7 @@ public class PayrollServlet extends HttpServlet {
         EmployeeService service = ServiceFactory.getDBEmployeeServiceInstance();
         List<Employee> employees = new ArrayList<>();
         try {
-            employees = service.getEmployees();
+            employees = service.getEmployeesWithPayperiods();
         } catch (ServiceException e) {
             e.printStackTrace();
         }
@@ -43,8 +43,8 @@ public class PayrollServlet extends HttpServlet {
         // dispatch attribute values to the Results page
         RequestDispatcher dispatcher =
                 servletContext.getRequestDispatcher("/employees.jsp");
-        //dispatcher.forward(request, response);
-        dispatcher.include(request, response);
+        dispatcher.forward(request, response);
+        //dispatcher.include(request, response);
 
     }
 }

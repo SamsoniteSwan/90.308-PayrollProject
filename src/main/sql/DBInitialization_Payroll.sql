@@ -1,5 +1,6 @@
 /* Clean database tables */
 DROP TABLE IF EXISTS payroll.tblPayPeriods CASCADE;
+DROP TABLE IF EXISTS payroll.tblEmployees_tblPayPeriods CASCADE;
 DROP TABLE IF EXISTS payroll.tblWorkLog CASCADE;
 DROP TABLE IF EXISTS payroll.tblEmployees CASCADE;
 DROP TABLE IF EXISTS payroll.tblRecords CASCADE;

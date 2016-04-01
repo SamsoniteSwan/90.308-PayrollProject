@@ -24,6 +24,8 @@ public interface EmployeeService {
      */
     List<Employee> getEmployees() throws ServiceException;
 
+    List<Employee> getEmployeesWithPayperiods() throws ServiceException;
+
     /**
      * Get all employees with a given Last Name.
      *

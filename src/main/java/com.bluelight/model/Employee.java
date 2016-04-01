@@ -1,11 +1,8 @@
 package com.bluelight.model;
 
-import com.bluelight.services.EmployeeService;
-import com.bluelight.services.ServiceException;
-import com.bluelight.services.ServiceFactory;
-import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -19,7 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="tblEmployees")
-public class Employee {
+public class Employee implements Serializable {
 
 
     public static final String DEFAULT_STATUS = "active";

@@ -1,13 +1,10 @@
 package com.bluelight.model;
 
-import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

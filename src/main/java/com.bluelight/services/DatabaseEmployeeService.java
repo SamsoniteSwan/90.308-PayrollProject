@@ -48,7 +48,7 @@ public class DatabaseEmployeeService implements EmployeeService {
             }
         }
 
-        session.close();
+        //session.close();
         return result;
     }
 
@@ -135,7 +135,7 @@ public class DatabaseEmployeeService implements EmployeeService {
                 transaction.commit();
             }
         }
-        session.close();
+        //session.close();
         return result;
     }
 
@@ -226,6 +226,25 @@ public class DatabaseEmployeeService implements EmployeeService {
         result = result.setScale(2, BigDecimal.ROUND_HALF_UP);
 
         return  result;
+    }
+
+    /**
+     *
+     * @return List of Employees with their corresponding PayPeriods instantiated
+     * @throws ServiceException
+     */
+    @Override
+    public List<Employee> getEmployeesWithPayperiods() throws ServiceException {
+
+        List<Employee> list = getEmployees();
+
+        for (Employee ee : list){
+            ee.setPayPeriods(getPayPeriods(ee));
+        }
+
+        return list;
+
+
     }
 
 }
